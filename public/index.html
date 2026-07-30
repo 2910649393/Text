@@ -39,7 +39,6 @@
       --shadow: 0 1px 3px rgba(0,0,0,0.3);
       --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
     }
-
     * { box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
@@ -49,8 +48,6 @@
       margin: 0;
       min-height: 100vh;
     }
-
-    /* 卡片样式 */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -58,11 +55,7 @@
       box-shadow: var(--shadow);
       transition: all 0.2s ease;
     }
-    .card:hover {
-      box-shadow: var(--shadow-lg);
-    }
-
-    /* 上传区域 */
+    .card:hover { box-shadow: var(--shadow-lg); }
     #dropZone {
       border: 2px dashed var(--border);
       border-radius: 12px;
@@ -79,21 +72,9 @@
       background: #eef2ff;
       box-shadow: inset 0 0 0 3px rgba(26,86,219,0.1);
     }
-    .dark #dropZone.drag-over {
-      background: #1e293b;
-      border-color: #3b82f6;
-    }
-    #dropZone.has-file {
-      border-style: solid;
-      border-color: #22c55e;
-      background: #f0fdf4;
-    }
-    .dark #dropZone.has-file {
-      background: #14532d33;
-      border-color: #22c55e;
-    }
-
-    /* 审查报告 Markdown 渲染 */
+    .dark #dropZone.drag-over { background: #1e293b; border-color: #3b82f6; }
+    #dropZone.has-file { border-style: solid; border-color: #22c55e; background: #f0fdf4; }
+    .dark #dropZone.has-file { background: #14532d33; border-color: #22c55e; }
     .report-content h1 { font-size: 1.75rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: #1a56db; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
     .report-content h2 { font-size: 1.4rem; font-weight: 700; margin: 1.25rem 0 0.6rem; color: #1e3a8a; }
     .report-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1rem 0 0.5rem; color: #334155; }
@@ -101,61 +82,15 @@
     .report-content ul, .report-content ol { margin: 0.5rem 0; padding-left: 1.5rem; }
     .report-content li { margin: 0.25rem 0; line-height: 1.7; }
     .report-content strong { color: #0f172a; font-weight: 700; }
-    .report-content code {
-      background: #f1f5f9;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.9em;
-      color: #e11d48;
-      font-family: 'Fira Code', 'Consolas', monospace;
-    }
-    .report-content pre {
-      background: #1e293b;
-      color: #e2e8f0;
-      padding: 16px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 0.75rem 0;
-      font-size: 0.9em;
-    }
-    .report-content pre code {
-      background: none;
-      color: inherit;
-      padding: 0;
-    }
-    .report-content table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0.75rem 0;
-      font-size: 0.9rem;
-      box-shadow: var(--shadow);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .report-content th {
-      background: #1a56db;
-      color: white;
-      padding: 10px 14px;
-      text-align: left;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .report-content td {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-card);
-    }
+    .report-content code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #e11d48; font-family: 'Fira Code', 'Consolas', monospace; }
+    .report-content pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 0.75rem 0; font-size: 0.9em; }
+    .report-content pre code { background: none; color: inherit; padding: 0; }
+    .report-content table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.9rem; box-shadow: var(--shadow); border-radius: 8px; overflow: hidden; }
+    .report-content th { background: #1a56db; color: white; padding: 10px 14px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .report-content td { padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--bg-card); }
     .report-content tr:last-child td { border-bottom: none; }
     .report-content tr:hover td { background: var(--bg-card-hover); }
-    .report-content blockquote {
-      border-left: 4px solid #1a56db;
-      padding: 8px 16px;
-      margin: 0.75rem 0;
-      background: #eef2ff;
-      border-radius: 0 6px 6px 0;
-      color: #1e3a8a;
-    }
-
+    .report-content blockquote { border-left: 4px solid #1a56db; padding: 8px 16px; margin: 0.75rem 0; background: #eef2ff; border-radius: 0 6px 6px 0; color: #1e3a8a; }
     .dark .report-content h1 { border-bottom-color: #334155; }
     .dark .report-content h2 { color: #93c5fd; }
     .dark .report-content h3 { color: #cbd5e1; }
@@ -163,83 +98,24 @@
     .dark .report-content code { background: #334155; }
     .dark .report-content blockquote { background: #1e293b; color: #93c5fd; }
     .dark .report-content th { background: #1e40af; }
-
-    /* 滚动条美化 */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-    /* 动画 */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-in { animation: fadeInUp 0.4s ease-out; }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-    .loading-dot { animation: pulse-dot 1.4s infinite; }
-    .loading-dot:nth-child(1) { animation-delay: 0s; }
-    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
     .spinner { animation: spin 1s linear infinite; }
-
-    /* 隐藏滚动条但可滚动的容器 */
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    /* 进度步骤 */
     .step { position: relative; padding-left: 32px; }
-    .step::before {
-      content: '';
-      position: absolute;
-      left: 10px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: #e2e8f0;
-    }
+    .step::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }
     .step:last-child::before { display: none; }
-    .step-icon {
-      position: absolute;
-      left: 0;
-      top: 2px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      border: 2px solid #cbd5e1;
-      background: white;
-      z-index: 1;
-      transition: all 0.3s;
-    }
-    .step.active .step-icon {
-      border-color: #1a56db;
-      background: #1a56db;
-      color: white;
-    }
-    .step.done .step-icon {
-      border-color: #22c55e;
-      background: #22c55e;
-      color: white;
-    }
-    .step.error .step-icon {
-      border-color: #ef4444;
-      background: #ef4444;
-      color: white;
-    }
-
-    /* 响应式 */
+    .step-icon { position: absolute; left: 0; top: 2px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid #cbd5e1; background: white; z-index: 1; transition: all 0.3s; }
+    .step.active .step-icon { border-color: #1a56db; background: #1a56db; color: white; }
+    .step.done .step-icon { border-color: #22c55e; background: #22c55e; color: white; }
+    .step.error .step-icon { border-color: #ef4444; background: #ef4444; color: white; }
     @media (max-width: 640px) {
       #dropZone { padding: 32px 16px; }
       .report-content table { font-size: 0.75rem; }
@@ -248,8 +124,6 @@
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 dark:bg-slate-900">
-
-  <!-- 顶部导航 -->
   <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -264,28 +138,18 @@
         </div>
       </div>
       <div class="flex items-center gap-3">
-        <!-- 历史记录按钮 -->
         <button id="historyBtn" onclick="toggleHistory()" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="审查历史">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         </button>
-        <!-- 暗色模式切换 -->
         <button id="darkToggle" onclick="toggleDarkMode()" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="切换暗色模式">
-          <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
-          <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-          </svg>
+          <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+          <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- 主内容区 -->
   <main class="max-w-5xl mx-auto px-4 py-8">
-    <!-- 审查历史面板 -->
     <div id="historyPanel" class="card p-4 mb-6 hidden animate-in">
       <div class="flex items-center justify-between mb-3">
         <h3 class="font-semibold text-slate-700 dark:text-slate-200">📋 审查历史</h3>
@@ -294,22 +158,16 @@
       <div id="historyList" class="space-y-2 max-h-64 overflow-y-auto"></div>
     </div>
 
-    <!-- 第一步：上传区域 + 配置 -->
     <div id="configSection" class="card p-6 mb-6 animate-in">
-      <!-- 上传区域 -->
       <div id="dropZone" onclick="document.getElementById('fileInput').click()">
         <input type="file" id="fileInput" accept=".pdf" class="hidden" onchange="handleFileSelect(event)">
         <svg id="uploadIcon" class="w-14 h-14 mx-auto mb-3 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
         </svg>
-        <p id="uploadText" class="text-slate-500 dark:text-slate-400 mb-1">
-          <span class="font-medium text-primary-600">拖拽 PDF 文件到此处</span> 或点击选择
-        </p>
+        <p id="uploadText" class="text-slate-500 dark:text-slate-400 mb-1"><span class="font-medium text-primary-600">拖拽 PDF 文件到此处</span> 或点击选择</p>
         <p class="text-xs text-slate-400 dark:text-slate-500">支持 .pdf 格式，最大 20MB</p>
         <div id="fileInfo" class="hidden mt-3"></div>
       </div>
-
-      <!-- 审查维度选择 -->
       <div class="mt-5">
         <h3 class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-3">审查维度</h3>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -327,105 +185,54 @@
           </label>
         </div>
       </div>
-
-      <!-- API Key -->
       <div class="mt-5">
         <label class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2 block">Kimi API Key</label>
         <div class="flex gap-2">
           <input type="password" id="apiKeyInput" class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" placeholder="输入你的 Kimi API Key（sk-开头的字符串）">
           <button onclick="toggleApiKeyVisibility()" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 transition text-sm text-slate-500 dark:text-slate-400" title="显示/隐藏">
-            <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
           </button>
         </div>
-        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1.5">
-          密钥仅储存在你的浏览器中，不会被我们保存。
-          <a href="https://platform.kimi.com" target="_blank" class="text-primary-600 hover:underline ml-1">获取 API Key →</a>
-        </p>
+        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1.5">密钥仅储存在你的浏览器中，不会被我们保存。<a href="https://platform.kimi.com" target="_blank" class="text-primary-600 hover:underline ml-1">获取 API Key →</a></p>
       </div>
-
-      <!-- 开始审查按钮 -->
-      <button id="startBtn" onclick="startReview()" disabled
-        class="mt-5 w-full py-3 rounded-lg font-semibold text-white transition-all duration-200
-               bg-primary-600 hover:bg-primary-700 active:scale-[0.98]
-               disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed
-               dark:disabled:bg-slate-700 dark:disabled:text-slate-500 shadow-md hover:shadow-lg">
+      <button id="startBtn" onclick="startReview()" disabled class="mt-5 w-full py-3 rounded-lg font-semibold text-white transition-all duration-200 bg-primary-600 hover:bg-primary-700 active:scale-[0.98] disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed dark:disabled:bg-slate-700 dark:disabled:text-slate-500 shadow-md hover:shadow-lg">
         <span id="startBtnText">🔍 开始审查</span>
-        <span id="startBtnLoading" class="hidden">
-          <svg class="spinner w-5 h-5 inline-block mr-2" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-          </svg>
-          审查中...
-        </span>
+        <span id="startBtnLoading" class="hidden"><svg class="spinner w-5 h-5 inline-block mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>审查中...</span>
       </button>
     </div>
 
-    <!-- 进度指示器 -->
     <div id="progressSection" class="card p-6 mb-6 hidden animate-in">
       <h3 class="font-semibold text-slate-700 dark:text-slate-200 mb-4">审查进度</h3>
       <div class="space-y-3">
-        <div id="step1" class="step">
-          <div class="step-icon">1</div>
-          <p class="text-sm font-medium">上传 PDF 文件</p>
-          <p id="step1Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p>
-        </div>
-        <div id="step2" class="step">
-          <div class="step-icon">2</div>
-          <p class="text-sm font-medium">提取文本内容</p>
-          <p id="step2Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p>
-        </div>
-        <div id="step3" class="step">
-          <div class="step-icon">3</div>
-          <p class="text-sm font-medium">AI 智能审查</p>
-          <p id="step3Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p>
-        </div>
+        <div id="step1" class="step"><div class="step-icon">1</div><p class="text-sm font-medium">上传 PDF 文件</p><p id="step1Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p></div>
+        <div id="step2" class="step"><div class="step-icon">2</div><p class="text-sm font-medium">提取文本内容</p><p id="step2Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p></div>
+        <div id="step3" class="step"><div class="step-icon">3</div><p class="text-sm font-medium">AI 智能审查</p><p id="step3Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p></div>
       </div>
-      <!-- 用时 & 停止按钮 -->
       <div class="flex items-center justify-between mt-4">
         <span id="timerDisplay" class="text-sm text-slate-500 dark:text-slate-400 hidden">⏱ 用时：<span id="timerValue">0</span> 秒</span>
-        <button id="stopBtn" onclick="stopReview()" class="text-sm px-4 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20 transition hidden">
-          ⏹ 停止审查
-        </button>
+        <button id="stopBtn" onclick="stopReview()" class="text-sm px-4 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20 transition hidden">⏹ 停止审查</button>
       </div>
     </div>
 
-    <!-- 审查报告 -->
     <div id="reportSection" class="card p-6 mb-6 hidden animate-in">
       <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
         <h3 class="font-semibold text-slate-700 dark:text-slate-200">📄 审查报告</h3>
         <div class="flex gap-2">
-          <button onclick="downloadReport('md')" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">
-            ⬇ 下载 .md
-          </button>
-          <button onclick="downloadReport('html')" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">
-            ⬇ 下载 .html
-          </button>
-          <button onclick="copyReport()" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">
-            📋 复制
-          </button>
+          <button onclick="downloadReport('md')" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">⬇ 下载 .md</button>
+          <button onclick="downloadReport('html')" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">⬇ 下载 .html</button>
+          <button onclick="copyReport()" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">📋 复制</button>
         </div>
       </div>
       <div id="reportContent" class="report-content prose prose-slate max-w-none dark:prose-invert"></div>
     </div>
 
-    <!-- 错误信息 -->
     <div id="errorSection" class="card p-6 mb-6 hidden animate-in border-red-300 dark:border-red-700">
       <div class="flex items-start gap-3">
-        <svg class="w-6 h-6 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <div>
-          <h4 class="font-semibold text-red-600 dark:text-red-400 mb-1">审查出错</h4>
-          <p id="errorMessage" class="text-sm text-slate-600 dark:text-slate-300"></p>
-          <button onclick="resetReview()" class="mt-3 text-sm text-primary-600 hover:underline">重新尝试</button>
-        </div>
+        <svg class="w-6 h-6 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <div><h4 class="font-semibold text-red-600 dark:text-red-400 mb-1">审查出错</h4><p id="errorMessage" class="text-sm text-slate-600 dark:text-slate-300"></p><button onclick="resetReview()" class="mt-3 text-sm text-primary-600 hover:underline">重新尝试</button></div>
       </div>
     </div>
 
-    <!-- 示例 PDF 提示 -->
     <div class="text-center mt-8 text-sm text-slate-400 dark:text-slate-500">
       <p>没有示例 PDF？可以下载一份示例报告进行测试。</p>
       <a href="#" onclick="downloadSamplePDF(); return false;" class="text-primary-600 hover:underline">📥 下载示例 PDF（占位文件）</a>
@@ -443,26 +250,17 @@
 
     // ==================== 初始化 ====================
     document.addEventListener('DOMContentLoaded', () => {
-      // 恢复暗色模式
       if (localStorage.getItem('darkMode') === 'true') {
         document.documentElement.classList.add('dark');
       }
-
-      // 恢复 API Key
       const cachedKey = localStorage.getItem('kimiApiKey');
       if (cachedKey) {
         document.getElementById('apiKeyInput').value = cachedKey;
       }
-
-      // 设置拖拽事件
       setupDragDrop();
-
-      // API Key 变化时缓存
       document.getElementById('apiKeyInput').addEventListener('change', () => {
         localStorage.setItem('kimiApiKey', document.getElementById('apiKeyInput').value);
       });
-
-      // 更新按钮状态
       updateStartButton();
     });
 
@@ -475,79 +273,47 @@
     // ==================== 拖拽上传 ====================
     function setupDragDrop() {
       const dropZone = document.getElementById('dropZone');
-
-      ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          dropZone.classList.add('drag-over');
-        });
+      ['dragenter', 'dragover'].forEach(en => {
+        dropZone.addEventListener(en, (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.add('drag-over'); });
       });
-
-      ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          dropZone.classList.remove('drag-over');
-        });
+      ['dragleave', 'drop'].forEach(en => {
+        dropZone.addEventListener(en, (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('drag-over'); });
       });
-
       dropZone.addEventListener('drop', (e) => {
         const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          handleFile(files[0]);
-        }
+        if (files.length > 0) handleFile(files[0]);
       });
     }
 
     function handleFileSelect(event) {
-      const files = event.target.files;
-      if (files.length > 0) {
-        handleFile(files[0]);
-      }
+      if (event.target.files.length > 0) handleFile(event.target.files[0]);
     }
 
     function handleFile(file) {
       if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-        showToast('请选择 PDF 文件', 'error');
-        return;
+        showToast('请选择 PDF 文件', 'error'); return;
       }
-
       if (file.size > 20 * 1024 * 1024) {
-        showToast('文件大小不能超过 20MB', 'error');
-        return;
+        showToast('文件大小不能超过 20MB', 'error'); return;
       }
-
       selectedFile = file;
-
-      // 更新 UI
       const dropZone = document.getElementById('dropZone');
       dropZone.classList.add('has-file');
-
       document.getElementById('uploadIcon').classList.add('hidden');
       document.getElementById('uploadText').innerHTML = '<span class="font-medium text-green-600 dark:text-green-400">✅ 文件已选择</span>';
-
       const fileInfo = document.getElementById('fileInfo');
       fileInfo.classList.remove('hidden');
       fileInfo.innerHTML = `
         <div class="flex items-center justify-center gap-3 mt-2">
           <div class="flex items-center gap-2 bg-white dark:bg-slate-700 px-4 py-2 rounded-lg shadow-sm border border-slate-200 dark:border-slate-600">
-            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
             <div class="text-left">
               <p class="text-sm font-medium text-slate-700 dark:text-slate-200 max-w-[200px] truncate">${escapeHtml(file.name)}</p>
               <p class="text-xs text-slate-400">${formatFileSize(file.size)}</p>
             </div>
-            <button onclick="removeFile(event)" class="text-slate-400 hover:text-red-500 transition p-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <button onclick="removeFile(event)" class="text-slate-400 hover:text-red-500 transition p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
           </div>
-        </div>
-      `;
-
+        </div>`;
       updateStartButton();
     }
 
@@ -563,24 +329,18 @@
       updateStartButton();
     }
 
-    // ==================== API Key 显示/隐藏 ====================
     function toggleApiKeyVisibility() {
       const input = document.getElementById('apiKeyInput');
       input.type = input.type === 'password' ? 'text' : 'password';
     }
 
-    // ==================== 按钮状态 ====================
     function updateStartButton() {
       const btn = document.getElementById('startBtn');
       const apiKeyInput = document.getElementById('apiKeyInput');
-      const hasFile = !!selectedFile;
-      const hasKey = apiKeyInput.value.trim().length > 0;
-      btn.disabled = !hasFile || !hasKey || isReviewing;
+      btn.disabled = !selectedFile || !apiKeyInput.value.trim() || isReviewing;
     }
-
     document.getElementById('apiKeyInput').addEventListener('input', updateStartButton);
 
-    // ==================== 审查维度 ====================
     function getSelectedDimensions() {
       const dims = [];
       if (document.getElementById('dim1').checked) dims.push('计算错误');
@@ -592,47 +352,31 @@
     // ==================== 开始审查 ====================
     async function startReview() {
       if (!selectedFile || isReviewing) return;
-
       const apiKey = document.getElementById('apiKeyInput').value.trim();
-      if (!apiKey) {
-        showToast('请输入 Kimi API Key', 'error');
-        return;
-      }
-
-      // 缓存 API Key
+      if (!apiKey) { showToast('请输入 Kimi API Key', 'error'); return; }
       localStorage.setItem('kimiApiKey', apiKey);
 
-      // 重置状态
       isReviewing = true;
       fullReportContent = '';
       reviewAbortController = new AbortController();
       reviewStartTime = Date.now();
 
-      // 重置 UI
       document.getElementById('reportSection').classList.add('hidden');
       document.getElementById('reportContent').innerHTML = '';
       document.getElementById('errorSection').classList.add('hidden');
       document.getElementById('errorMessage').textContent = '';
-
-      // 显示进度
       document.getElementById('progressSection').classList.remove('hidden');
       resetSteps();
       document.getElementById('timerDisplay').classList.remove('hidden');
       document.getElementById('stopBtn').classList.remove('hidden');
       startTimer();
-
-      // 更新按钮状态
       updateStartButton();
       document.getElementById('startBtnText').classList.add('hidden');
       document.getElementById('startBtnLoading').classList.remove('hidden');
 
-      // 准备请求：PDF 文件作为 raw binary body 发送，参数通过 Header 传递
-      // 这样可以避免 Vercel Serverless Function 的 bodyParser 兼容性问题
-      // 注意：HTTP Header 值不能包含非 ASCII 字符（如中文），需要 encodeURIComponent
       const fileBuffer = await selectedFile.arrayBuffer();
 
       try {
-        // 使用 fetch + ReadableStream 处理 SSE
         const response = await fetch('/api/review', {
           method: 'POST',
           headers: {
@@ -648,14 +392,11 @@
         if (!response.ok) {
           const errText = await response.text();
           let errMsg = errText;
-          try {
-            const errJson = JSON.parse(errText);
-            errMsg = errJson.error || errText;
-          } catch (_) {}
+          try { const errJson = JSON.parse(errText); errMsg = errJson.error || errText; } catch (_) {}
           throw new Error(`服务器错误 (${response.status}): ${errMsg}`);
         }
 
-        // 读取 SSE 流
+        // === SSE 流式解析（修复版：基于索引遍历，杜绝 indexOf 错误匹配） ===
         const reader = response.body.getReader();
         const decoder = new TextDecoder('utf-8');
         let buffer = '';
@@ -668,17 +409,15 @@
           const lines = buffer.split('\n');
           buffer = lines.pop() || '';
 
-          for (const line of lines) {
-            if (line.startsWith('event: ')) {
-              const eventType = line.slice(7).trim();
-              // 下一行是 data
-              const dataIdx = lines.indexOf(line) + 1;
-              if (dataIdx < lines.length && lines[dataIdx].startsWith('data: ')) {
-                const dataStr = lines[dataIdx].slice(6);
+          for (let li = 0; li < lines.length; li++) {
+            if (lines[li].startsWith('event: ')) {
+              const eventType = lines[li].slice(7).trim();
+              if (li + 1 < lines.length && lines[li + 1].startsWith('data: ')) {
                 try {
-                  const data = JSON.parse(dataStr);
+                  const data = JSON.parse(lines[li + 1].slice(6));
                   handleSSEEvent(eventType, data);
                 } catch (_) { /* skip */ }
+                li++;
               }
             }
           }
@@ -687,23 +426,21 @@
         // 处理剩余 buffer
         if (buffer.trim()) {
           const remainingLines = buffer.split('\n');
-          for (let i = 0; i < remainingLines.length - 1; i++) {
-            const line = remainingLines[i];
-            if (line.startsWith('event: ')) {
-              const eventType = line.slice(7).trim();
+          for (let i = 0; i < remainingLines.length; i++) {
+            if (remainingLines[i].startsWith('event: ')) {
+              const eventType = remainingLines[i].slice(7).trim();
               if (i + 1 < remainingLines.length && remainingLines[i + 1].startsWith('data: ')) {
                 try {
                   const data = JSON.parse(remainingLines[i + 1].slice(6));
                   handleSSEEvent(eventType, data);
                 } catch (_) { /* skip */ }
+                i++;
               }
-              i++;
             }
           }
         }
       } catch (err) {
         if (err.name === 'AbortError') {
-          // 用户手动停止
           setStepError('step3', '用户停止审查');
         } else {
           showError(err.message);
@@ -717,124 +454,62 @@
       switch (eventType) {
         case 'stage':
           switch (data.stage) {
-            case 'upload':
-              setStepActive('step1');
-              updateStepMessage('step1', data.message);
-              break;
-            case 'upload_done':
-              setStepDone('step1');
-              updateStepMessage('step1', data.message);
-              break;
-            case 'extract':
-              setStepActive('step2');
-              updateStepMessage('step2', data.message);
-              break;
-            case 'extract_done':
-              setStepDone('step2');
-              updateStepMessage('step2', data.message);
-              break;
-            case 'review':
-              setStepActive('step3');
-              updateStepMessage('step3', data.message);
-              // 同时显示报告区域
-              document.getElementById('reportSection').classList.remove('hidden');
-              break;
+            case 'upload': setStepActive('step1'); updateStepMessage('step1', data.message); break;
+            case 'upload_done': setStepDone('step1'); updateStepMessage('step1', data.message); break;
+            case 'extract': setStepActive('step2'); updateStepMessage('step2', data.message); break;
+            case 'extract_done': setStepDone('step2'); updateStepMessage('step2', data.message); break;
+            case 'review': setStepActive('step3'); updateStepMessage('step3', data.message); document.getElementById('reportSection').classList.remove('hidden'); break;
           }
           break;
-
         case 'content':
           fullReportContent += data.content || '';
           renderReport(fullReportContent);
           break;
-
         case 'done':
-          setStepDone('step3');
-          updateStepMessage('step3', data.message || '审查完成');
-          stopTimer();
-          // 保存到历史记录
-          saveToHistory(fullReportContent);
+          setStepDone('step3'); updateStepMessage('step3', data.message || '审查完成');
+          stopTimer(); saveToHistory(fullReportContent);
           break;
-
         case 'error':
-          showError(data.error || '未知错误');
-          setStepError('step3', data.error);
+          showError(data.error || '未知错误'); setStepError('step3', data.error);
           break;
       }
     }
 
-    // ==================== 进度步骤 ====================
     function resetSteps() {
-      ['step1', 'step2', 'step3'].forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.remove('active', 'done', 'error');
-        document.getElementById(id + 'Msg').textContent = '等待中...';
+      ['step1','step2','step3'].forEach(id => {
+        document.getElementById(id).classList.remove('active','done','error');
+        document.getElementById(id+'Msg').textContent = '等待中...';
       });
     }
+    function setStepActive(id) { const el = document.getElementById(id); el.classList.remove('done','error'); el.classList.add('active'); }
+    function setStepDone(id) { const el = document.getElementById(id); el.classList.remove('active','error'); el.classList.add('done'); }
+    function setStepError(id, msg) { const el = document.getElementById(id); el.classList.remove('active','done'); el.classList.add('error'); updateStepMessage(id, msg || '出错'); }
+    function updateStepMessage(id, msg) { document.getElementById(id+'Msg').textContent = msg; }
 
-    function setStepActive(id) {
-      const el = document.getElementById(id);
-      el.classList.remove('done', 'error');
-      el.classList.add('active');
-    }
-
-    function setStepDone(id) {
-      const el = document.getElementById(id);
-      el.classList.remove('active', 'error');
-      el.classList.add('done');
-    }
-
-    function setStepError(id, msg) {
-      const el = document.getElementById(id);
-      el.classList.remove('active', 'done');
-      el.classList.add('error');
-      updateStepMessage(id, msg || '出错');
-    }
-
-    function updateStepMessage(id, msg) {
-      document.getElementById(id + 'Msg').textContent = msg;
-    }
-
-    // ==================== 报告渲染 ====================
     function renderReport(markdown) {
       const container = document.getElementById('reportContent');
-      // 高亮 ✅ ❌ ⚠️
       let highlighted = markdown
         .replace(/✅/g, '<span style="color:#22c55e;font-size:1.2em;">✅</span>')
         .replace(/❌/g, '<span style="color:#ef4444;font-size:1.2em;">❌</span>')
         .replace(/⚠️/g, '<span style="color:#f59e0b;font-size:1.2em;">⚠️</span>')
         .replace(/⚠/g, '<span style="color:#f59e0b;font-size:1.2em;">⚠</span>');
-
-      try {
-        container.innerHTML = marked.parse(highlighted);
-      } catch (e) {
-        container.innerHTML = `<pre>${escapeHtml(markdown)}</pre>`;
-      }
-
-      // 自动滚动到底部
+      try { container.innerHTML = marked.parse(highlighted); } catch (e) { container.innerHTML = `<pre>${escapeHtml(markdown)}</pre>`; }
       container.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
 
-    // ==================== 完成/重置 ====================
     function finishReview() {
-      isReviewing = false;
-      stopTimer();
-      reviewAbortController = null;
-
+      isReviewing = false; stopTimer(); reviewAbortController = null;
       document.getElementById('startBtnText').classList.remove('hidden');
       document.getElementById('startBtnLoading').classList.add('hidden');
       document.getElementById('stopBtn').classList.add('hidden');
       updateStartButton();
-
-      // 如果报告为空且有进度，提示
       if (!fullReportContent && document.getElementById('errorSection').classList.contains('hidden')) {
         showError('审查未返回任何内容，请重试');
       }
     }
 
     function resetReview() {
-      isReviewing = false;
-      stopTimer();
-      reviewAbortController = null;
+      isReviewing = false; stopTimer(); reviewAbortController = null;
       document.getElementById('progressSection').classList.add('hidden');
       document.getElementById('errorSection').classList.add('hidden');
       document.getElementById('reportSection').classList.add('hidden');
@@ -842,14 +517,11 @@
       document.getElementById('startBtnText').classList.remove('hidden');
       document.getElementById('startBtnLoading').classList.add('hidden');
       document.getElementById('stopBtn').classList.add('hidden');
-      fullReportContent = '';
-      updateStartButton();
+      fullReportContent = ''; updateStartButton();
     }
 
     function stopReview() {
-      if (reviewAbortController) {
-        reviewAbortController.abort();
-      }
+      if (reviewAbortController) reviewAbortController.abort();
     }
 
     function showError(msg) {
@@ -858,110 +530,51 @@
       stopTimer();
     }
 
-    // ==================== 计时器 ====================
     function startTimer() {
-      stopTimer();
-      reviewStartTime = Date.now();
+      stopTimer(); reviewStartTime = Date.now();
       timerInterval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - reviewStartTime) / 1000);
-        document.getElementById('timerValue').textContent = elapsed;
+        document.getElementById('timerValue').textContent = Math.floor((Date.now() - reviewStartTime) / 1000);
       }, 1000);
     }
 
     function stopTimer() {
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
     }
 
-    // ==================== 下载报告 ====================
     function downloadReport(format) {
-      if (!fullReportContent) {
-        showToast('没有可下载的报告内容', 'error');
-        return;
-      }
-
+      if (!fullReportContent) { showToast('没有可下载的报告内容', 'error'); return; }
       const now = new Date();
       const timestamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
       const baseName = `财务审查报告_${timestamp}`;
-
       let content, filename, mimeType;
-
       if (format === 'md') {
-        content = fullReportContent;
-        filename = `${baseName}.md`;
-        mimeType = 'text/markdown';
+        content = fullReportContent; filename = `${baseName}.md`; mimeType = 'text/markdown';
       } else {
-        // HTML
         const htmlContent = marked.parse(fullReportContent);
-        content = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>财务审查报告 - ${timestamp}</title>
-<style>
-  body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; max-width: 900px; margin: 0 auto; padding: 40px 20px; color: #0f172a; line-height: 1.8; }
-  h1 { color: #1a56db; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
-  h2 { color: #1e3a8a; } h3 { color: #334155; }
-  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-  th { background: #1a56db; color: white; padding: 10px 14px; text-align: left; }
-  td { padding: 10px 14px; border-bottom: 1px solid #e2e8f0; }
-  code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: #e11d48; }
-  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; }
-  blockquote { border-left: 4px solid #1a56db; padding: 8px 16px; background: #eef2ff; }
-</style>
-</head>
-<body>
-${htmlContent}
-<footer style="margin-top:40px;padding-top:20px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:13px;">
-  <p>由财务 PDF 智能审查系统生成 | ${now.toLocaleString('zh-CN')}</p>
-</footer>
-</body>
-</html>`;
-        filename = `${baseName}.html`;
-        mimeType = 'text/html';
+        content = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>财务审查报告</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;max-width:900px;margin:0 auto;padding:40px 20px;color:#0f172a;line-height:1.8}h1{color:#1a56db;border-bottom:2px solid #e2e8f0}h2{color:#1e3a8a}h3{color:#334155}table{width:100%;border-collapse:collapse;margin:16px 0}th{background:#1a56db;color:#fff;padding:10px 14px;text-align:left}td{padding:10px 14px;border-bottom:1px solid #e2e8f0}code{background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#e11d48}pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto}blockquote{border-left:4px solid #1a56db;padding:8px 16px;background:#eef2ff}</style></head><body>${htmlContent}<footer style="margin-top:40px;padding-top:20px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:13px"><p>由财务 PDF 智能审查系统生成 | ${now.toLocaleString('zh-CN')}</p></footer></body></html>`;
+        filename = `${baseName}.html`; mimeType = 'text/html';
       }
-
       const blob = new Blob([content], { type: mimeType });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
+      const a = document.createElement('a'); a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
       showToast(`报告已下载为 ${filename}`, 'success');
     }
 
     function copyReport() {
-      if (!fullReportContent) {
-        showToast('没有可复制的内容', 'error');
-        return;
-      }
-      navigator.clipboard.writeText(fullReportContent).then(() => {
-        showToast('报告已复制到剪贴板', 'success');
-      }).catch(() => {
-        showToast('复制失败，请手动选择', 'error');
-      });
+      if (!fullReportContent) { showToast('没有可复制的内容', 'error'); return; }
+      navigator.clipboard.writeText(fullReportContent).then(() => showToast('报告已复制到剪贴板', 'success')).catch(() => showToast('复制失败', 'error'));
     }
 
-    // ==================== 历史记录 ====================
     function saveToHistory(content) {
       const history = JSON.parse(localStorage.getItem('reviewHistory') || '[]');
       history.unshift({
-        id: Date.now(),
-        date: new Date().toLocaleString('zh-CN'),
+        id: Date.now(), date: new Date().toLocaleString('zh-CN'),
         fileName: selectedFile ? selectedFile.name : '未知文件',
         fileSize: selectedFile ? formatFileSize(selectedFile.size) : '',
-        preview: content.substring(0, 200) + '...',
-        fullContent: content,
+        preview: content.substring(0, 200) + '...', fullContent: content,
         elapsed: Math.floor((Date.now() - reviewStartTime) / 1000),
       });
-      // 最多保存 20 条
       if (history.length > 20) history.length = 20;
       localStorage.setItem('reviewHistory', JSON.stringify(history));
       renderHistory();
@@ -970,108 +583,69 @@ ${htmlContent}
     function renderHistory() {
       const history = JSON.parse(localStorage.getItem('reviewHistory') || '[]');
       const list = document.getElementById('historyList');
-      if (history.length === 0) {
-        list.innerHTML = '<p class="text-sm text-slate-400 text-center py-4">暂无审查记录</p>';
-        return;
-      }
-      list.innerHTML = history.map((item, index) => `
-        <div class="flex items-start justify-between p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition" onclick="viewHistory(${index})">
+      if (history.length === 0) { list.innerHTML = '<p class="text-sm text-slate-400 text-center py-4">暂无审查记录</p>'; return; }
+      list.innerHTML = history.map((item, i) => `
+        <div class="flex items-start justify-between p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer transition" onclick="viewHistory(${i})">
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">${escapeHtml(item.fileName)}</p>
             <p class="text-xs text-slate-400 mt-0.5">${item.date} · ${item.fileSize} · ${item.elapsed}秒完成</p>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 truncate">${escapeHtml(item.preview)}</p>
           </div>
-          <button onclick="event.stopPropagation(); deleteHistoryItem(${item.id})" class="text-slate-400 hover:text-red-500 transition p-1 shrink-0">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-        </div>
-      `).join('');
+          <button onclick="event.stopPropagation(); deleteHistoryItem(${item.id})" class="text-slate-400 hover:text-red-500 transition p-1 shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+        </div>`).join('');
     }
 
     function toggleHistory() {
       const panel = document.getElementById('historyPanel');
       panel.classList.toggle('hidden');
-      if (!panel.classList.contains('hidden')) {
-        renderHistory();
-        panel.scrollIntoView({ behavior: 'smooth' });
-      }
+      if (!panel.classList.contains('hidden')) { renderHistory(); panel.scrollIntoView({ behavior: 'smooth' }); }
     }
 
     function viewHistory(index) {
       const history = JSON.parse(localStorage.getItem('reviewHistory') || '[]');
-      const item = history[index];
-      if (!item) return;
-
+      const item = history[index]; if (!item) return;
       fullReportContent = item.fullContent;
       document.getElementById('reportSection').classList.remove('hidden');
       renderReport(fullReportContent);
-
-      // 隐藏配置区以突出报告
       document.getElementById('historyPanel').classList.add('hidden');
       document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
     }
 
     function deleteHistoryItem(id) {
       const history = JSON.parse(localStorage.getItem('reviewHistory') || '[]');
-      const updated = history.filter(item => item.id !== id);
-      localStorage.setItem('reviewHistory', JSON.stringify(updated));
+      localStorage.setItem('reviewHistory', JSON.stringify(history.filter(item => item.id !== id)));
       renderHistory();
     }
 
     function clearHistory() {
-      if (confirm('确定要清空所有审查历史吗？此操作不可恢复。')) {
-        localStorage.removeItem('reviewHistory');
-        renderHistory();
-      }
+      if (confirm('确定要清空所有审查历史吗？此操作不可恢复。')) { localStorage.removeItem('reviewHistory'); renderHistory(); }
     }
 
-    // ==================== Toast ====================
     function showToast(msg, type = 'info') {
-      const colors = {
-        success: 'bg-green-500',
-        error: 'bg-red-500',
-        info: 'bg-primary-600',
-      };
+      const colors = { success: 'bg-green-500', error: 'bg-red-500', info: 'bg-primary-600' };
       const toast = document.createElement('div');
       toast.className = `fixed bottom-6 right-6 z-50 px-5 py-3 rounded-lg text-white text-sm font-medium shadow-lg animate-in ${colors[type] || colors.info}`;
-      toast.textContent = msg;
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.3s';
-        setTimeout(() => toast.remove(), 300);
-      }, 2500);
+      toast.textContent = msg; document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 2500);
     }
 
-    // ==================== 示例 PDF下载 ====================
     function downloadSamplePDF() {
-      showToast('示例 PDF 功能需要部署到 Vercel 后可用（需配置公开 PDF 链接）', 'info');
-      // 提示：实际使用时可以将示例 PDF 放在 public/ 目录下
-      // 然后提供一个真实的下载链接
+      showToast('示例 PDF 功能需要部署到 Vercel 后可用', 'info');
     }
 
-    // ==================== 工具函数 ====================
     function formatFileSize(bytes) {
       if (bytes === 0) return '0 B';
-      const k = 1024;
-      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const k = 1024, sizes = ['B', 'KB', 'MB', 'GB'];
       const i = Math.floor(Math.log(bytes) / Math.log(k));
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+      const div = document.createElement('div'); div.textContent = str; return div.innerHTML;
     }
 
-    // ==================== 页面关闭时清理 ====================
     window.addEventListener('beforeunload', () => {
-      if (reviewAbortController) {
-        reviewAbortController.abort();
-      }
+      if (reviewAbortController) reviewAbortController.abort();
       stopTimer();
     });
   </script>
