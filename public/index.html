@@ -628,6 +628,7 @@
 
       // 准备请求：PDF 文件作为 raw binary body 发送，参数通过 Header 传递
       // 这样可以避免 Vercel Serverless Function 的 bodyParser 兼容性问题
+      // 注意：HTTP Header 值不能包含非 ASCII 字符（如中文），需要 encodeURIComponent
       const fileBuffer = await selectedFile.arrayBuffer();
 
       try {
@@ -637,7 +638,7 @@
           headers: {
             'Content-Type': 'application/pdf',
             'X-API-Key': apiKey,
-            'X-Dimensions': getSelectedDimensions(),
+            'X-Dimensions': encodeURIComponent(getSelectedDimensions()),
             'X-File-Name': encodeURIComponent(selectedFile.name),
           },
           body: fileBuffer,

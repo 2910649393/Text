@@ -4,6 +4,96 @@ const FormData = require("form-data");
 // Kimi API 基础 URL
 const KIMI_API_BASE = "https://api.moonshot.cn/v1";
 
+// ==================== 工具函数 ====================
+
+// 安全解码 URI 编码的字符串（前端对 Header 做了 encodeURIComponent）
+function decodeURIComponentSafe(str) {
+  if (!str) return "";
+  try {
+    return decodeURIComponent(str);
+  } catch (_) {
+    return str;
+  }
+}
+
+// 发送 JSON 响应（原生 Node.js http.ServerResponse API）
+function sendJSON(res, statusCode, data) {
+  res.statusCode = statusCode;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.end(JSON.stringify(data));
+}
+
+// 读取 HTTP 请求的完整 raw body（bodyParser 已禁用）
+function readRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on("data", (chunk) => chunks.push(chunk));
+    req.on("end", () => resolve(Buffer.concat(chunks)));
+    req.on("error", reject);
+  });
+}
+
+// 发送 SSE 事件
+function sendSSE(res, event, data) {
+  try {
+    res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+  } catch (_) {
+    // 连接可能已断开
+  }
+}
+
+// 手动解析 multipart/form-data（回退兼容）
+function parseMultipartFormData(buffer, boundary) {
+  const fields = {};
+  const files = {};
+  const delimiter = Buffer.from(`--${boundary}`);
+  const doubleNewline = Buffer.from("\r\n\r\n");
+
+  let start = 0;
+  const parts = [];
+
+  while (start < buffer.length) {
+    const idx = buffer.indexOf(delimiter, start);
+    if (idx === -1) break;
+    start = idx + delimiter.length;
+    if (buffer[start] === 0x0d && buffer[start + 1] === 0x0a) start += 2;
+
+    const nextDelim = buffer.indexOf(delimiter, start);
+    if (nextDelim === -1) break;
+
+    let partEnd = nextDelim - 2;
+    if (partEnd > start && buffer[partEnd] === 0x0a && buffer[partEnd - 1] === 0x0d) {
+      partEnd -= 2;
+    }
+    parts.push(buffer.slice(start, partEnd));
+    start = nextDelim;
+  }
+
+  for (const part of parts) {
+    const headerEnd = part.indexOf(doubleNewline);
+    if (headerEnd === -1) continue;
+
+    const headerSection = part.slice(0, headerEnd).toString("utf-8");
+    const body = part.slice(headerEnd + doubleNewline.length);
+
+    const cdMatch = headerSection.match(/Content-Disposition:\s*form-data;\s*name="([^"]+)"(?:;\s*filename="([^"]*)")?/i);
+    if (!cdMatch) continue;
+
+    const fieldName = cdMatch[1];
+    const filename = cdMatch[2];
+
+    if (filename) {
+      files[fieldName] = { filename, data: body };
+    } else {
+      fields[fieldName] = body.toString("utf-8").trim();
+    }
+  }
+
+  return { fields, files };
+}
+
+// ==================== Kimi API 调用 ====================
+
 // 构建系统提示词
 function buildSystemPrompt(dimensions) {
   const dims = (dimensions || "").split(",").map((d) => d.trim()).filter(Boolean);
@@ -12,12 +102,11 @@ function buildSystemPrompt(dimensions) {
   if (dims.includes("计算错误") || dims.length === 0) selectedTasks.push("任务一");
   if (dims.includes("附注一致性") || dims.length === 0) selectedTasks.push("任务二");
   if (dims.includes("标点格式") || dims.length === 0) selectedTasks.push("任务三");
-  // 如果没有任何匹配，默认全部
   if (selectedTasks.length === 0) selectedTasks.push("任务一", "任务二", "任务三");
 
   const taskInstruction = selectedTasks.length === 3
     ? "请完成全部三项任务。"
-    : `请注意：用户仅选择了 ${selectedTasks.join("、")}，请只输出这些任务的审查结果，跳过来被选中的任务。`;
+    : `请注意：用户仅选择了 ${selectedTasks.join("、")}，请只输出这些任务的审查结果，跳过未被选中的任务。`;
 
   return `你是一名具备注册会计师（CPA）资质的财务报告审查专家，同时精通中英文排版规范。现在请你对所提供的完整PDF财务报告（含全部附注、管理层讨论及补充信息）进行逐项审查，并严格按照以下三项任务输出最终结论。
 
@@ -80,9 +169,7 @@ async function uploadFileToKimi(apiKey, fileBuffer, fileName) {
 async function getFileContent(apiKey, fileId) {
   const response = await fetch(`${KIMI_API_BASE}/files/${fileId}/content`, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-    },
+    headers: { Authorization: `Bearer ${apiKey}` },
   });
 
   if (!response.ok) {
@@ -99,9 +186,7 @@ async function deleteFile(apiKey, fileId) {
   try {
     await fetch(`${KIMI_API_BASE}/files/${fileId}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: { Authorization: `Bearer ${apiKey}` },
     });
   } catch (_) {
     // 删除失败不影响主流程
@@ -132,7 +217,6 @@ async function* streamChatCompletions(apiKey, systemPrompt, fileContent) {
     throw new Error(`Kimi Chat API 调用失败 (${response.status}): ${errorText}`);
   }
 
-  // 逐行读取 SSE 流
   let buffer = "";
   for await (const chunk of response.body) {
     buffer += chunk.toString("utf-8");
@@ -152,41 +236,27 @@ async function* streamChatCompletions(apiKey, systemPrompt, fileContent) {
         if (delta?.content) {
           yield { type: "content", content: delta.content };
         }
-      } catch (_) {
-        // 跳过无法解析的行
-      }
+      } catch (_) { /* skip */ }
     }
   }
 
-  // 处理 buffer 中剩余的内容
+  // 处理缓冲区中剩余的内容
   if (buffer.trim()) {
     const trimmed = buffer.trim();
-    if (trimmed.startsWith("data:")) {
-      const jsonStr = trimmed.slice(5).trim();
-      if (jsonStr !== "[DONE]") {
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const delta = parsed.choices?.[0]?.delta;
-          if (delta?.content) {
-            yield { type: "content", content: delta.content };
-          }
-        } catch (_) { /* ignore */ }
-      }
+    if (trimmed.startsWith("data:") && !trimmed.includes("[DONE]")) {
+      try {
+        const parsed = JSON.parse(trimmed.slice(5).trim());
+        const delta = parsed.choices?.[0]?.delta;
+        if (delta?.content) {
+          yield { type: "content", content: delta.content };
+        }
+      } catch (_) { /* ignore */ }
     }
   }
 }
 
-// 读取 HTTP 请求的完整 raw body
-function readRawBody(req) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    req.on("data", (chunk) => chunks.push(chunk));
-    req.on("end", () => resolve(Buffer.concat(chunks)));
-    req.on("error", reject);
-  });
-}
+// ==================== 主处理函数 ====================
 
-// 主处理函数
 const handler = async function (req, res) {
   // CORS 头
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -195,40 +265,36 @@ const handler = async function (req, res) {
   res.setHeader("Access-Control-Expose-Headers", "*");
 
   if (req.method === "OPTIONS") {
-    res.status(200).end();
+    res.statusCode = 200;
+    res.end();
     return;
   }
 
   if (req.method !== "POST") {
-    res.status(405).json({ error: "仅支持 POST 请求" });
+    sendJSON(res, 405, { error: "仅支持 POST 请求" });
     return;
   }
 
   const contentType = (req.headers["content-type"] || "").toLowerCase();
 
   // ==================== 解析参数 ====================
-  // 方案 1：从自定义 Header 读取（推荐，最可靠）
+  // 从自定义 Header 读取（前端已做 encodeURIComponent 确保只含 ISO-8859-1 字符）
   let apiKey = req.headers["x-api-key"] || "";
-  let dimensions = req.headers["x-dimensions"] || "计算错误,附注一致性,标点格式";
-  let fileName = req.headers["x-file-name"] || "report.pdf";
+  let dimensions = decodeURIComponentSafe(req.headers["x-dimensions"]) || "计算错误,附注一致性,标点格式";
+  let fileName = decodeURIComponentSafe(req.headers["x-file-name"]) || "report.pdf";
   let streamMode = true;
 
   try {
     // 1. 读取 raw body
     const rawBody = await readRawBody(req);
-
     let fileBuffer = null;
 
-    // 2. 根据 Content-Type 判断如何解析
+    // 2. 根据 Content-Type 解析
     if (contentType.includes("application/pdf") || contentType.includes("application/octet-stream")) {
-      // PDF 作为 raw binary body 发送
+      // PDF 作为 raw binary body 发送（主要方式）
       fileBuffer = rawBody;
-      if (!apiKey) {
-        // 再次尝试从 raw body 中解析（可能是 multipart 回退）
-        // 不做额外处理，Header 应该是主要来源
-      }
     } else if (contentType.includes("multipart/form-data")) {
-      // multipart/form-data 回退方案（兼容旧版）
+      // multipart/form-data 回退
       const boundary = contentType.split("boundary=")[1];
       if (boundary) {
         const parsed = parseMultipartFormData(rawBody, boundary);
@@ -243,7 +309,7 @@ const handler = async function (req, res) {
         }
       }
     } else if (contentType.includes("application/json")) {
-      // JSON base64 回退方案
+      // JSON base64 回退
       try {
         const json = JSON.parse(rawBody.toString("utf-8"));
         if (json.file) {
@@ -253,37 +319,25 @@ const handler = async function (req, res) {
         if (json.apiKey) apiKey = apiKey || json.apiKey;
         if (json.dimensions) dimensions = dimensions || json.dimensions;
         if (json.stream !== undefined) streamMode = json.stream === true || json.stream === "true";
-      } catch (e) {
-        // JSON 解析失败，可能是 bodyParser 已经处理过的对象（Vercel 默认行为）
-        // rawBody 实际上是 Vercel 已经解析过的 JSON 对象序列化后的结果
-        // 在这种情境下，fileBuffer 仍为 null，会在后面报错
-      }
+      } catch (e) { /* ignore */ }
     } else {
-      // 未知 Content-Type：尝试作为 JSON 解析
-      // Vercel 默认 bodyParser 可能会将 req.body 设置为解析后的对象
-      // 但因为我们禁用了 bodyParser，这里的 rawBody 就是原始数据
-      try {
-        const text = rawBody.toString("utf-8");
-        if (text.startsWith("{") || text.startsWith("[")) {
+      // 未知 Content-Type：尝试作为 PDF raw body
+      if (rawBody.length > 0 && rawBody[0] === 0x25 && rawBody[1] === 0x50) {
+        // PDF 魔数 %PDF 检测通过
+        fileBuffer = rawBody;
+      } else {
+        // 尝试 JSON 解析
+        try {
+          const text = rawBody.toString("utf-8");
           const json = JSON.parse(text);
           if (json.file) {
             fileBuffer = Buffer.from(json.file, "base64");
-            fileName = json.fileName || fileName;
           }
           if (json.apiKey) apiKey = apiKey || json.apiKey;
           if (json.dimensions) dimensions = dimensions || json.dimensions;
-        } else if (text.startsWith("sk-")) {
-          // 看起来像是 API Key 被误当作了 body
-          apiKey = apiKey || text.trim();
-        }
-      } catch (e) {
-        // 最后的回退：把整个 raw body 当作 PDF 文件内容
-        if (rawBody.length > 0) {
-          fileBuffer = rawBody;
-          // 通过魔数检查是否是 PDF
-          if (rawBody[0] === 0x25 && rawBody[1] === 0x50) {
-            // 是合法的 PDF (以 %PDF 开头)
-          }
+        } catch (e) {
+          // 最终回退：当作 PDF 内容
+          if (rawBody.length > 0) fileBuffer = rawBody;
         }
       }
     }
@@ -295,17 +349,17 @@ const handler = async function (req, res) {
 
     // ==================== 参数校验 ====================
     if (!apiKey) {
-      res.status(400).json({
+      sendJSON(res, 400, {
         error: "缺少 API Key，请在前端输入 API Key 或设置 MOONSHOT_API_KEY 环境变量",
-        hint: "请通过 X-API-Key 请求头或在请求体中传递 apiKey 参数",
+        hint: "请通过 X-API-Key 请求头传递 apiKey",
       });
       return;
     }
 
     if (!fileBuffer || fileBuffer.length === 0) {
-      res.status(400).json({
+      sendJSON(res, 400, {
         error: "未收到有效的 PDF 文件",
-        hint: "请将 PDF 文件作为请求 body（Content-Type: application/pdf）发送，或使用 multipart/form-data 格式",
+        hint: "请将 PDF 文件作为请求 body（Content-Type: application/pdf）发送",
         receivedContentType: contentType,
         bodySize: rawBody.length,
       });
@@ -359,7 +413,7 @@ const handler = async function (req, res) {
         res.end();
       }
     } else {
-      // === 非流式模式 ===
+      // === 非流式模式（JSON 响应） ===
       let fileId = null;
 
       try {
@@ -395,19 +449,17 @@ const handler = async function (req, res) {
           await deleteFile(apiKey, fileId);
         }
 
-        res.status(200).json({
+        sendJSON(res, 200, {
           success: true,
           content: reviewContent,
           contentLength: fileContent.length,
         });
       } catch (err) {
         console.error("审查过程出错:", err);
-
         if (fileId) {
           await deleteFile(apiKey, fileId).catch(() => {});
         }
-
-        res.status(500).json({
+        sendJSON(res, 500, {
           success: false,
           error: err.message || "未知错误",
         });
@@ -416,84 +468,15 @@ const handler = async function (req, res) {
   } catch (err) {
     console.error("请求处理出错:", err);
     if (!res.headersSent) {
-      res.status(500).json({ error: `服务器内部错误: ${err.message}` });
+      sendJSON(res, 500, { error: `服务器内部错误: ${err.message}` });
     }
   }
 };
 
-// ==================== 辅助函数：手动解析 multipart/form-data ====================
-function parseMultipartFormData(buffer, boundary) {
-  const fields = {};
-  const files = {};
-
-  // 边界分隔符
-  const delimiter = Buffer.from(`--${boundary}`);
-  const closeDelimiter = Buffer.from(`--${boundary}--`);
-  const newline = Buffer.from("\r\n");
-  const doubleNewline = Buffer.from("\r\n\r\n");
-
-  // 按边界切分
-  let start = 0;
-  const parts = [];
-
-  while (start < buffer.length) {
-    const idx = buffer.indexOf(delimiter, start);
-    if (idx === -1) break;
-    start = idx + delimiter.length;
-
-    // 跳过开头的换行
-    if (buffer[start] === 0x0d && buffer[start + 1] === 0x0a) start += 2;
-
-    const nextDelim = buffer.indexOf(delimiter, start);
-    if (nextDelim === -1) break;
-
-    let partEnd = nextDelim - 2; // 去掉分隔符前的 \r\n
-    if (partEnd > start && buffer[partEnd] === 0x0a && partEnd > 0 && buffer[partEnd - 1] === 0x0d) {
-      partEnd -= 2;
-    }
-
-    parts.push(buffer.slice(start, partEnd));
-    start = nextDelim;
-  }
-
-  for (const part of parts) {
-    const headerEnd = part.indexOf(doubleNewline);
-    if (headerEnd === -1) continue;
-
-    const headerSection = part.slice(0, headerEnd).toString("utf-8");
-    const body = part.slice(headerEnd + doubleNewline.length);
-
-    // 解析 Content-Disposition
-    const cdMatch = headerSection.match(/Content-Disposition:\s*form-data;\s*name="([^"]+)"(?:;\s*filename="([^"]*)")?/i);
-    if (!cdMatch) continue;
-
-    const fieldName = cdMatch[1];
-    const filename = cdMatch[2];
-
-    if (filename) {
-      files[fieldName] = {
-        filename: filename,
-        data: body,
-      };
-    } else {
-      fields[fieldName] = body.toString("utf-8").trim();
-    }
-  }
-
-  return { fields, files };
-}
-
-// 发送 SSE 事件
-function sendSSE(res, event, data) {
-  try {
-    res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
-  } catch (_) {
-    // 连接可能已断开
-  }
-}
-
-// 导出 handler（CommonJS），同时设置 bodyParser: false 以手动处理 raw body
+// ==================== 导出 ====================
+// 1. 导出 handler 函数
 module.exports = handler;
+// 2. 设置 config，禁用 Vercel 默认 bodyParser
 module.exports.config = {
   api: {
     bodyParser: false,
