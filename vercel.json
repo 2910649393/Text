@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "api/review.js": {
+      "memory": 512,
+      "maxDuration": 55
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/public/$1"
+    }
+  ]
+}
