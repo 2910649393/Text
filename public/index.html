@@ -626,17 +626,21 @@
       document.getElementById('startBtnText').classList.add('hidden');
       document.getElementById('startBtnLoading').classList.remove('hidden');
 
-      // 准备 FormData
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('apiKey', apiKey);
-      formData.append('dimensions', getSelectedDimensions());
+      // 准备请求：PDF 文件作为 raw binary body 发送，参数通过 Header 传递
+      // 这样可以避免 Vercel Serverless Function 的 bodyParser 兼容性问题
+      const fileBuffer = await selectedFile.arrayBuffer();
 
       try {
         // 使用 fetch + ReadableStream 处理 SSE
         const response = await fetch('/api/review', {
           method: 'POST',
-          body: formData,
+          headers: {
+            'Content-Type': 'application/pdf',
+            'X-API-Key': apiKey,
+            'X-Dimensions': getSelectedDimensions(),
+            'X-File-Name': encodeURIComponent(selectedFile.name),
+          },
+          body: fileBuffer,
           signal: reviewAbortController.signal,
         });
 
