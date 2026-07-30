@@ -125,11 +125,13 @@ function buildBatchUserContent(images, batchIndex, totalBatches) {
 
 // ==================== Kimi API 调用 ====================
 
-async function* streamKimiChat(apiKey, model, messages, temperature = 0.3) {
+async function* streamKimiChat(apiKey, model, messages, temperature = null) {
+  const reqBody = { model, messages, stream: true };
+  if (temperature !== null) reqBody.temperature = temperature;
   const response = await fetch(`${KIMI_API_BASE}/chat/completions`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model, messages, stream: true, temperature }),
+    body: JSON.stringify(reqBody),
   });
   if (!response.ok) {
     const errorText = await response.text();
