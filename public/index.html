@@ -11,89 +11,56 @@
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
     tailwind.config = {
       darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: { 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#1a56db', 700: '#1e40af', 800: '#1e3a8a', 900: '#172554' }
-          }
-        }
-      }
+      theme: { extend: { colors: { primary: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#1a56db',700:'#1e40af',800:'#1e3a8a',900:'#172554' } } } }
     }
   </script>
   <style>
-    :root {
-      --bg: #ffffff; --bg-card: #f8fafc; --bg-card-hover: #f1f5f9;
-      --text: #0f172a; --text-secondary: #475569; --border: #e2e8f0;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-      --shadow-lg: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.05);
-    }
-    .dark {
-      --bg: #0f172a; --bg-card: #1e293b; --bg-card-hover: #334155;
-      --text: #f1f5f9; --text-secondary: #94a3b8; --border: #334155;
-      --shadow: 0 1px 3px rgba(0,0,0,0.3); --shadow-lg: 0 10px 25px rgba(0,0,0,0.4);
-    }
-    * { box-sizing: border-box; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      background: var(--bg); color: var(--text);
-      transition: background 0.3s, color 0.3s; margin: 0; min-height: 100vh;
-    }
-    .card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 12px; box-shadow: var(--shadow); transition: all 0.2s ease;
-    }
-    .card:hover { box-shadow: var(--shadow-lg); }
-    #dropZone {
-      border: 2px dashed var(--border); border-radius: 12px; padding: 48px 24px;
-      text-align: center; cursor: pointer; transition: all 0.3s ease;
-      background: var(--bg-card); position: relative; overflow: hidden;
-    }
-    #dropZone.drag-over { border-color: #1a56db; background: #eef2ff; box-shadow: inset 0 0 0 3px rgba(26,86,219,0.1); }
-    .dark #dropZone.drag-over { background: #1e293b; border-color: #3b82f6; }
-    #dropZone.has-file { border-style: solid; border-color: #22c55e; background: #f0fdf4; }
-    .dark #dropZone.has-file { background: #14532d33; border-color: #22c55e; }
-    .report-content h1 { font-size: 1.75rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: #1a56db; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
-    .report-content h2 { font-size: 1.4rem; font-weight: 700; margin: 1.25rem 0 0.6rem; color: #1e3a8a; }
-    .report-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1rem 0 0.5rem; color: #334155; }
-    .report-content p { margin: 0.5rem 0; line-height: 1.75; }
-    .report-content ul, .report-content ol { margin: 0.5rem 0; padding-left: 1.5rem; }
-    .report-content li { margin: 0.25rem 0; line-height: 1.7; }
-    .report-content strong { color: #0f172a; font-weight: 700; }
-    .report-content code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #e11d48; font-family: monospace; }
-    .report-content pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 0.75rem 0; font-size: 0.9em; }
-    .report-content pre code { background: none; color: inherit; padding: 0; }
-    .report-content table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.9rem; box-shadow: var(--shadow); border-radius: 8px; overflow: hidden; }
-    .report-content th { background: #1a56db; color: white; padding: 10px 14px; text-align: left; font-weight: 600; white-space: nowrap; }
-    .report-content td { padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--bg-card); }
-    .report-content tr:last-child td { border-bottom: none; }
-    .report-content tr:hover td { background: var(--bg-card-hover); }
-    .report-content blockquote { border-left: 4px solid #1a56db; padding: 8px 16px; margin: 0.75rem 0; background: #eef2ff; border-radius: 0 6px 6px 0; color: #1e3a8a; }
-    .dark .report-content h1 { border-bottom-color: #334155; } .dark .report-content h2 { color: #93c5fd; }
-    .dark .report-content h3 { color: #cbd5e1; } .dark .report-content strong { color: #f1f5f9; }
-    .dark .report-content code { background: #334155; }
-    .dark .report-content blockquote { background: #1e293b; color: #93c5fd; }
-    .dark .report-content th { background: #1e40af; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-in { animation: fadeInUp 0.4s ease-out; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { animation: spin 1s linear infinite; }
-    .step { position: relative; padding-left: 32px; }
-    .step::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #e2e8f0; }
-    .step:last-child::before { display: none; }
-    .step-icon { position: absolute; left: 0; top: 2px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid #cbd5e1; background: white; z-index: 1; transition: all 0.3s; }
-    .step.active .step-icon { border-color: #1a56db; background: #1a56db; color: white; }
-    .step.done .step-icon { border-color: #22c55e; background: #22c55e; color: white; }
-    .step.error .step-icon { border-color: #ef4444; background: #ef4444; color: white; }
-    /* 渲染进度条 */
-    #renderProgress { transition: width 0.3s ease; }
-    @media (max-width: 640px) {
-      #dropZone { padding: 32px 16px; }
-      .report-content table { font-size: 0.75rem; }
-      .report-content th, .report-content td { padding: 6px 8px; }
-    }
+    :root { --bg:#ffffff;--bg-card:#f8fafc;--bg-card-hover:#f1f5f9;--text:#0f172a;--text-secondary:#475569;--border:#e2e8f0;--shadow:0 1px 3px rgba(0,0,0,0.08);--shadow-lg:0 10px 25px rgba(0,0,0,0.08); }
+    .dark { --bg:#0f172a;--bg-card:#1e293b;--bg-card-hover:#334155;--text:#f1f5f9;--text-secondary:#94a3b8;--border:#334155;--shadow:0 1px 3px rgba(0,0,0,0.3);--shadow-lg:0 10px 25px rgba(0,0,0,0.4); }
+    *{box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);transition:background 0.3s,color 0.3s;margin:0;min-height:100vh}
+    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);transition:all 0.2s}
+    .card:hover{box-shadow:var(--shadow-lg)}
+    #dropZone{border:2px dashed var(--border);border-radius:12px;padding:48px 24px;text-align:center;cursor:pointer;transition:all .3s;background:var(--bg-card)}
+    #dropZone.drag-over{border-color:#1a56db;background:#eef2ff;box-shadow:inset 0 0 0 3px rgba(26,86,219,0.1)}
+    .dark #dropZone.drag-over{background:#1e293b;border-color:#3b82f6}
+    #dropZone.has-file{border-style:solid;border-color:#22c55e;background:#f0fdf4}
+    .dark #dropZone.has-file{background:#14532d33;border-color:#22c55e}
+    .report-content h1{font-size:1.75rem;font-weight:700;margin:1.5rem 0 0.75rem;color:#1a56db;border-bottom:2px solid #e2e8f0;padding-bottom:0.5rem}
+    .report-content h2{font-size:1.4rem;font-weight:700;margin:1.25rem 0 0.6rem;color:#1e3a8a}
+    .report-content h3{font-size:1.15rem;font-weight:600;margin:1rem 0 0.5rem;color:#334155}
+    .report-content p{margin:0.5rem 0;line-height:1.75}
+    .report-content ul,.report-content ol{margin:0.5rem 0;padding-left:1.5rem}
+    .report-content li{margin:0.25rem 0;line-height:1.7}
+    .report-content strong{color:#0f172a;font-weight:700}
+    .report-content code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.9em;color:#e11d48;font-family:monospace}
+    .report-content pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px;overflow-x:auto;margin:.75rem 0;font-size:.9em}
+    .report-content pre code{background:none;color:inherit;padding:0}
+    .report-content table{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.9rem;box-shadow:var(--shadow);border-radius:8px;overflow:hidden}
+    .report-content th{background:#1a56db;color:#fff;padding:10px 14px;text-align:left;font-weight:600;white-space:nowrap}
+    .report-content td{padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg-card)}
+    .report-content tr:last-child td{border-bottom:none}
+    .report-content tr:hover td{background:var(--bg-card-hover)}
+    .report-content blockquote{border-left:4px solid #1a56db;padding:8px 16px;margin:.75rem 0;background:#eef2ff;border-radius:0 6px 6px 0;color:#1e3a8a}
+    .dark .report-content h1{border-bottom-color:#334155}.dark .report-content h2{color:#93c5fd}.dark .report-content h3{color:#cbd5e1}.dark .report-content strong{color:#f1f5f9}
+    .dark .report-content code{background:#334155}.dark .report-content blockquote{background:#1e293b;color:#93c5fd}.dark .report-content th{background:#1e40af}
+    ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .animate-in{animation:fadeInUp .4s ease-out}
+    @keyframes spin{to{transform:rotate(360deg)}}.spinner{animation:spin 1s linear infinite}
+    .step{position:relative;padding-left:32px}
+    .step::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:#e2e8f0}
+    .step:last-child::before{display:none}
+    .step-icon{position:absolute;left:0;top:2px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid #cbd5e1;background:#fff;z-index:1;transition:all .3s}
+    .step.active .step-icon{border-color:#1a56db;background:#1a56db;color:#fff}
+    .step.done .step-icon{border-color:#22c55e;background:#22c55e;color:#fff}
+    .step.error .step-icon{border-color:#ef4444;background:#ef4444;color:#fff}
+    #renderProgress{transition:width .3s}
+    .batch-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin:0 2px}
+    .batch-dot.waiting{background:#cbd5e1}.batch-dot.active{background:#1a56db;animation:pulse 1.2s infinite}
+    .batch-dot.done{background:#22c55e}.batch-dot.failed{background:#ef4444}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+    @media(max-width:640px){#dropZone{padding:32px 16px}.report-content table{font-size:.75rem}.report-content th,.report-content td{padding:6px 8px}}
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 dark:bg-slate-900">
@@ -102,298 +69,258 @@
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg bg-primary-600 flex items-center justify-center shadow-md">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         </div>
-        <div>
-          <h1 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">财务 PDF 智能审查</h1>
-          <p class="text-xs text-slate-500 dark:text-slate-400">基于 Kimi 视觉 AI 的自动化审计助手</p>
-        </div>
+        <div><h1 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">财务 PDF 智能审查</h1><p class="text-xs text-slate-500 dark:text-slate-400">基于 Kimi 视觉 AI · 分批审查</p></div>
       </div>
       <div class="flex items-center gap-3">
-        <button onclick="toggleHistory()" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="审查历史">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        </button>
-        <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="切换暗色模式">
-          <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-          <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
-        </button>
+        <button onclick="toggleHistory()" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition" title="历史"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></button>
+        <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition"><svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></button>
       </div>
     </div>
   </header>
 
   <main class="max-w-5xl mx-auto px-4 py-8">
-    <!-- 历史面板 -->
-    <div id="historyPanel" class="card p-4 mb-6 hidden animate-in">
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="font-semibold text-slate-700 dark:text-slate-200">📋 审查历史</h3>
-        <button onclick="clearHistory()" class="text-xs text-red-500 hover:text-red-700 transition">清空记录</button>
-      </div>
-      <div id="historyList" class="space-y-2 max-h-64 overflow-y-auto"></div>
-    </div>
+    <!-- 历史 -->
+    <div id="historyPanel" class="card p-4 mb-6 hidden animate-in"><div class="flex items-center justify-between mb-3"><h3 class="font-semibold text-slate-700 dark:text-slate-200">📋 审查历史</h3><button onclick="clearHistory()" class="text-xs text-red-500 hover:text-red-700">清空</button></div><div id="historyList" class="space-y-2 max-h-64 overflow-y-auto"></div></div>
 
-    <!-- 配置面板 -->
+    <!-- 配置 -->
     <div id="configSection" class="card p-6 mb-6 animate-in">
       <div id="dropZone" onclick="document.getElementById('fileInput').click()">
         <input type="file" id="fileInput" accept=".pdf" class="hidden" onchange="handleFileSelect(event)">
-        <svg id="uploadIcon" class="w-14 h-14 mx-auto mb-3 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-        </svg>
+        <svg id="uploadIcon" class="w-14 h-14 mx-auto mb-3 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
         <p id="uploadText" class="text-slate-500 dark:text-slate-400 mb-1"><span class="font-medium text-primary-600">拖拽 PDF 文件到此处</span> 或点击选择</p>
-        <p class="text-xs text-slate-400 dark:text-slate-500">支持 .pdf 格式，最大 50MB（含扫描件）</p>
+        <p class="text-xs text-slate-400 dark:text-slate-500">支持 .pdf，最大 80MB · 最多60页 · 每批10页</p>
         <div id="fileInfo" class="hidden mt-3"></div>
       </div>
-
-      <!-- 审查维度 -->
-      <div class="mt-5">
-        <h3 class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-3">审查维度</h3>
+      <!-- 维度 -->
+      <div class="mt-5"><h3 class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-3">审查维度</h3>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <label class="flex items-center gap-2 p-3 rounded-lg border border-slate-200 dark:border-slate-600 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition has-[:checked]:border-primary-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-900/20">
-            <input type="checkbox" id="dim1" value="计算错误" checked class="w-4 h-4 rounded accent-primary-600">
-            <span class="text-sm text-slate-700 dark:text-slate-200">📊 数据计算错误审查</span>
-          </label>
-          <label class="flex items-center gap-2 p-3 rounded-lg border border-slate-200 dark:border-slate-600 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition has-[:checked]:border-primary-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-900/20">
-            <input type="checkbox" id="dim2" value="附注一致性" checked class="w-4 h-4 rounded accent-primary-600">
-            <span class="text-sm text-slate-700 dark:text-slate-200">🔗 主表与附注一致性审查</span>
-          </label>
-          <label class="flex items-center gap-2 p-3 rounded-lg border border-slate-200 dark:border-slate-600 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition has-[:checked]:border-primary-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-900/20">
-            <input type="checkbox" id="dim3" value="标点格式" checked class="w-4 h-4 rounded accent-primary-600">
-            <span class="text-sm text-slate-700 dark:text-slate-200">📝 标点符号与格式错误审查</span>
-          </label>
+          <label class="flex items-center gap-2 p-3 rounded-lg border border-slate-200 dark:border-slate-600 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition has-[:checked]:border-primary-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-900/20"><input type="checkbox" id="dim1" value="计算错误" checked class="w-4 h-4 rounded accent-primary-600"><span class="text-sm text-slate-700 dark:text-slate-200">📊 数据计算错误</span></label>
+          <label class="flex items-center gap-2 p-3 rounded-lg border border-slate-200 dark:border-slate-600 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition has-[:checked]:border-primary-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-900/20"><input type="checkbox" id="dim2" value="附注一致性" checked class="w-4 h-4 rounded accent-primary-600"><span class="text-sm text-slate-700 dark:text-slate-200">🔗 主表附注一致性</span></label>
+          <label class="flex items-center gap-2 p-3 rounded-lg border border-slate-200 dark:border-slate-600 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700 transition has-[:checked]:border-primary-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-900/20"><input type="checkbox" id="dim3" value="标点格式" checked class="w-4 h-4 rounded accent-primary-600"><span class="text-sm text-slate-700 dark:text-slate-200">📝 标点格式错误</span></label>
         </div>
       </div>
-
-      <!-- API Key -->
-      <div class="mt-5">
-        <label class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2 block">Kimi API Key</label>
-        <div class="flex gap-2">
-          <input type="password" id="apiKeyInput" class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition" placeholder="输入你的 Kimi API Key（sk-开头的字符串）">
-          <button onclick="toggleApiKeyVisibility()" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 transition text-sm text-slate-500 dark:text-slate-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></button>
-        </div>
-        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1.5">密钥仅储存在你的浏览器中。<a href="https://platform.kimi.com" target="_blank" class="text-primary-600 hover:underline ml-1">获取 API Key →</a></p>
+      <!-- Key -->
+      <div class="mt-5"><label class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-2 block">Kimi API Key</label>
+        <div class="flex gap-2"><input type="password" id="apiKeyInput" class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white text-sm focus:ring-2 focus:ring-primary-500 outline-none" placeholder="输入 Kimi API Key（sk-开头）"><button onclick="toggleApiKeyVisibility()" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600 transition text-sm text-slate-500 dark:text-slate-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button></div>
+        <p class="text-xs text-slate-400 dark:text-slate-500 mt-1.5">密钥仅储存在浏览器。<a href="https://platform.kimi.com" target="_blank" class="text-primary-600 hover:underline ml-1">获取 Key →</a></p>
       </div>
-
-      <button id="startBtn" onclick="startReview()" disabled class="mt-5 w-full py-3 rounded-lg font-semibold text-white transition-all duration-200 bg-primary-600 hover:bg-primary-700 active:scale-[0.98] disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed dark:disabled:bg-slate-700 dark:disabled:text-slate-500 shadow-md">
-        <span id="startBtnText">🔍 开始审查</span>
-        <span id="startBtnLoading" class="hidden"><svg class="spinner w-5 h-5 inline-block mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>审查中...</span>
-      </button>
+      <button id="startBtn" onclick="startReview()" disabled class="mt-5 w-full py-3 rounded-lg font-semibold text-white transition-all duration-200 bg-primary-600 hover:bg-primary-700 active:scale-[0.98] disabled:bg-slate-300 disabled:text-slate-500 disabled:cursor-not-allowed dark:disabled:bg-slate-700 dark:disabled:text-slate-500 shadow-md"><span id="startBtnText">🔍 开始审查</span><span id="startBtnLoading" class="hidden"><svg class="spinner w-5 h-5 inline-block mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>审查中...</span></button>
     </div>
 
-    <!-- 进度面板 -->
+    <!-- 进度 -->
     <div id="progressSection" class="card p-6 mb-6 hidden animate-in">
       <h3 class="font-semibold text-slate-700 dark:text-slate-200 mb-4">审查进度</h3>
       <div class="space-y-3">
-        <div id="step1" class="step"><div class="step-icon">1</div><p class="text-sm font-medium">渲染 PDF 页面为图片</p><p id="step1Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p></div>
-        <div id="step2" class="step"><div class="step-icon">2</div><p class="text-sm font-medium">AI 视觉模型审查</p><p id="step2Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p></div>
+        <div id="step1" class="step"><div class="step-icon">1</div><p class="text-sm font-medium">渲染 PDF 为图片</p><p id="step1Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p></div>
+        <div id="step2" class="step"><div class="step-icon">2</div><p class="text-sm font-medium">分批审查</p><p id="step2Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p>
+          <div id="batchDots" class="mt-2 flex flex-wrap gap-1"></div>
+        </div>
+        <div id="step3" class="step"><div class="step-icon">3</div><p class="text-sm font-medium">生成汇总报告</p><p id="step3Msg" class="text-xs text-slate-400 mt-0.5">等待中...</p></div>
       </div>
-      <!-- 渲染进度条 -->
       <div id="renderBarContainer" class="mt-3 hidden">
-        <div class="flex justify-between text-xs text-slate-500 mb-1">
-          <span id="renderLabel">正在渲染第 0/0 页</span>
-          <span id="renderPercent">0%</span>
-        </div>
-        <div class="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2 overflow-hidden">
-          <div id="renderProgress" class="bg-primary-600 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
-        </div>
+        <div class="flex justify-between text-xs text-slate-500 mb-1"><span id="renderLabel">渲染第 0/0 页</span><span id="renderPercent">0%</span></div>
+        <div class="w-full bg-slate-200 dark:bg-slate-600 rounded-full h-2"><div id="renderProgress" class="bg-primary-600 h-full rounded-full" style="width:0%"></div></div>
       </div>
       <div class="flex items-center justify-between mt-4">
-        <span id="timerDisplay" class="text-sm text-slate-500 dark:text-slate-400 hidden">⏱ 用时：<span id="timerValue">0</span> 秒</span>
-        <button id="stopBtn" onclick="stopReview()" class="text-sm px-4 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20 transition hidden">⏹ 停止审查</button>
+        <span id="timerDisplay" class="text-sm text-slate-500 dark:text-slate-400 hidden">⏱ <span id="timerValue">0</span>秒</span>
+        <button id="stopBtn" onclick="stopReview()" class="text-sm px-4 py-2 rounded-lg border border-red-300 text-red-600 hover:bg-red-50 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20 transition hidden">⏹ 停止</button>
       </div>
     </div>
 
-    <!-- 报告面板 -->
-    <div id="reportSection" class="card p-6 mb-6 hidden animate-in">
+    <!-- 批次结果区 -->
+    <div id="batchResultsSection" class="hidden">
+      <div id="batchResultsList" class="space-y-4"></div>
+    </div>
+
+    <!-- 汇总报告 -->
+    <div id="summarySection" class="card p-6 mb-6 hidden animate-in border-primary-300 dark:border-primary-700">
       <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
-        <h3 class="font-semibold text-slate-700 dark:text-slate-200">📄 审查报告</h3>
+        <h3 class="font-semibold text-slate-700 dark:text-slate-200">📋 最终审查汇总报告</h3>
         <div class="flex gap-2">
           <button onclick="downloadReport('md')" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">⬇ .md</button>
           <button onclick="downloadReport('html')" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">⬇ .html</button>
-          <button onclick="copyReport()" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">📋 复制</button>
+          <button onclick="copyFullReport()" class="text-sm px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition text-slate-600 dark:text-slate-300">📋 复制</button>
         </div>
       </div>
-      <div id="reportContent" class="report-content prose prose-slate max-w-none dark:prose-invert"></div>
+      <div id="summaryContent" class="report-content prose prose-slate max-w-none dark:prose-invert"></div>
     </div>
 
-    <!-- 错误面板 -->
+    <!-- 错误 -->
     <div id="errorSection" class="card p-6 mb-6 hidden animate-in border-red-300 dark:border-red-700">
-      <div class="flex items-start gap-3">
-        <svg class="w-6 h-6 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        <div><h4 class="font-semibold text-red-600 dark:text-red-400 mb-1">审查出错</h4><p id="errorMessage" class="text-sm text-slate-600 dark:text-slate-300"></p><button onclick="resetReview()" class="mt-3 text-sm text-primary-600 hover:underline">重新尝试</button></div>
-      </div>
+      <div class="flex items-start gap-3"><svg class="w-6 h-6 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><h4 class="font-semibold text-red-600 dark:text-red-400 mb-1">审查出错</h4><p id="errorMessage" class="text-sm text-slate-600 dark:text-slate-300"></p><button onclick="resetReview()" class="mt-3 text-sm text-primary-600 hover:underline">重新尝试</button></div></div>
     </div>
   </main>
 
   <script>
-    // ==================== 全局状态 ====================
-    let selectedFile = null;
-    let pdfDoc = null;
-    let totalPages = 0;
-    let reviewAbortController = null;
-    let reviewStartTime = null;
-    let timerInterval = null;
-    let fullReportContent = '';
-    let isReviewing = false;
+    // ==================== 常量与状态 ====================
+    const BATCH_SIZE = 10;
+    const MAX_PAGES = 60;
+    const BATCH_TIMEOUT_MS = 55000;
 
-    const MAX_PAGES = 20;
+    let selectedFile = null, pdfDoc = null, totalPages = 0;
+    let reviewAbortController = null, reviewStartTime = null, timerInterval = null;
+    let isReviewing = false;
+    let allImages = [];             // 全部渲染后的 base64 数组
+    let batchContents = [];        // 每批的审查文本
+    let fullSummaryContent = '';   // 汇总报告内容
+    let currentBatchIndex = 0;     // 当前正在处理的批次
 
     // ==================== 初始化 ====================
     document.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('darkMode') === 'true') document.documentElement.classList.add('dark');
-      const cachedKey = localStorage.getItem('kimiApiKey');
-      if (cachedKey) document.getElementById('apiKeyInput').value = cachedKey;
+      const ck = localStorage.getItem('kimiApiKey');
+      if (ck) document.getElementById('apiKeyInput').value = ck;
       setupDragDrop();
-      document.getElementById('apiKeyInput').addEventListener('change', () => {
-        localStorage.setItem('kimiApiKey', document.getElementById('apiKeyInput').value);
-      });
+      document.getElementById('apiKeyInput').addEventListener('change', () => localStorage.setItem('kimiApiKey', document.getElementById('apiKeyInput').value));
       updateStartButton();
     });
 
-    function toggleDarkMode() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('darkMode', isDark);
-    }
-
+    function toggleDarkMode() { localStorage.setItem('darkMode', document.documentElement.classList.toggle('dark')); }
     function setupDragDrop() {
       const dz = document.getElementById('dropZone');
       ['dragenter','dragover'].forEach(en => dz.addEventListener(en, e => { e.preventDefault(); dz.classList.add('drag-over'); }));
       ['dragleave','drop'].forEach(en => dz.addEventListener(en, e => { e.preventDefault(); dz.classList.remove('drag-over'); }));
-      dz.addEventListener('drop', e => { if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+      dz.addEventListener('drop', e => { if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
     }
-
-    function handleFileSelect(e) { if (e.target.files.length) handleFile(e.target.files[0]); }
-
+    function handleFileSelect(e) { if(e.target.files.length) handleFile(e.target.files[0]); }
     async function handleFile(file) {
-      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) { showToast('请选择 PDF 文件', 'error'); return; }
-      if (file.size > 50 * 1024 * 1024) { showToast('文件大小不能超过 50MB', 'error'); return; }
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) { showToast('请选择 PDF','error'); return; }
+      if (file.size > 80*1024*1024) { showToast('文件不超过80MB','error'); return; }
       selectedFile = file;
-
-      // 更新 UI
       const dz = document.getElementById('dropZone');
       dz.classList.add('has-file');
       document.getElementById('uploadIcon').classList.add('hidden');
       document.getElementById('uploadText').innerHTML = '<span class="font-medium text-green-600 dark:text-green-400">✅ 文件已选择</span>';
-
-      // 用 pdf.js 读取总页数
       try {
-        const arrayBuf = await file.arrayBuffer();
-        pdfDoc = await pdfjsLib.getDocument({ data: arrayBuf }).promise;
+        const ab = await file.arrayBuffer();
+        pdfDoc = await pdfjsLib.getDocument({ data: ab }).promise;
         totalPages = pdfDoc.numPages;
-
         const fi = document.getElementById('fileInfo');
         fi.classList.remove('hidden');
-        fi.innerHTML = `
-          <div class="flex items-center justify-center gap-3 mt-2">
-            <div class="flex items-center gap-2 bg-white dark:bg-slate-700 px-4 py-2 rounded-lg shadow-sm border border-slate-200 dark:border-slate-600">
-              <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-              <div class="text-left">
-                <p class="text-sm font-medium text-slate-700 dark:text-slate-200 max-w-[250px] truncate">${escapeHtml(file.name)}</p>
-                <p class="text-xs text-slate-400">${formatFileSize(file.size)} · ${totalPages} 页</p>
-                ${totalPages > MAX_PAGES ? `<p class="text-xs text-amber-500">⚠ 页数超过${MAX_PAGES}页，将仅审查前${MAX_PAGES}页</p>` : ''}
-              </div>
-              <button onclick="removeFile(event)" class="text-slate-400 hover:text-red-500 transition p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
-            </div>
-          </div>`;
-      } catch (err) {
-        showToast('无法读取 PDF 文件，文件可能已损坏', 'error');
-        removeFileDirect();
-        return;
-      }
+        fi.innerHTML = `<div class="flex items-center justify-center gap-3 mt-2"><div class="flex items-center gap-2 bg-white dark:bg-slate-700 px-4 py-2 rounded-lg shadow-sm border border-slate-200 dark:border-slate-600"><svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><div class="text-left"><p class="text-sm font-medium truncate max-w-[250px]">${escapeHtml(file.name)}</p><p class="text-xs text-slate-400">${formatFileSize(file.size)} · ${totalPages}页 · 将分${Math.ceil(Math.min(totalPages,MAX_PAGES)/BATCH_SIZE)}批审查</p></div><button onclick="removeFile(event)" class="text-slate-400 hover:text-red-500 p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button></div></div>`;
+      } catch { showToast('无法读取PDF','error'); removeFileDirect(); return; }
       updateStartButton();
     }
-
     function removeFile(e) { e.stopPropagation(); removeFileDirect(); }
     function removeFileDirect() {
-      selectedFile = null; pdfDoc = null; totalPages = 0;
-      const dz = document.getElementById('dropZone');
-      dz.classList.remove('has-file');
+      selectedFile=null;pdfDoc=null;totalPages=0;allImages=[];batchContents=[];
+      const dz=document.getElementById('dropZone');dz.classList.remove('has-file');
       document.getElementById('uploadIcon').classList.remove('hidden');
-      document.getElementById('uploadText').innerHTML = '<span class="font-medium text-primary-600">拖拽 PDF 文件到此处</span> 或点击选择';
-      document.getElementById('fileInfo').classList.add('hidden');
-      document.getElementById('fileInput').value = '';
+      document.getElementById('uploadText').innerHTML='<span class="font-medium text-primary-600">拖拽 PDF 文件到此处</span> 或点击选择';
+      document.getElementById('fileInfo').classList.add('hidden');document.getElementById('fileInput').value='';
       updateStartButton();
     }
+    function toggleApiKeyVisibility() { const i=document.getElementById('apiKeyInput');i.type=i.type==='password'?'text':'password'; }
+    function updateStartButton() { document.getElementById('startBtn').disabled=!selectedFile||!document.getElementById('apiKeyInput').value.trim()||isReviewing; }
+    document.getElementById('apiKeyInput').addEventListener('input',updateStartButton);
+    function getDims() { const d=[];if(document.getElementById('dim1').checked)d.push('计算错误');if(document.getElementById('dim2').checked)d.push('附注一致性');if(document.getElementById('dim3').checked)d.push('标点格式');return d.join(','); }
 
-    function toggleApiKeyVisibility() {
-      const inp = document.getElementById('apiKeyInput');
-      inp.type = inp.type === 'password' ? 'text' : 'password';
-    }
-
-    function updateStartButton() {
-      document.getElementById('startBtn').disabled = !selectedFile || !document.getElementById('apiKeyInput').value.trim() || isReviewing;
-    }
-    document.getElementById('apiKeyInput').addEventListener('input', updateStartButton);
-
-    function getSelectedDimensions() {
-      const dims = [];
-      if (document.getElementById('dim1').checked) dims.push('计算错误');
-      if (document.getElementById('dim2').checked) dims.push('附注一致性');
-      if (document.getElementById('dim3').checked) dims.push('标点格式');
-      return dims.join(',');
-    }
-
-    // ==================== PDF 渲染为图片 ====================
-    async function renderPageToImage(pageNum, quality) {
+    // ==================== PDF 渲染 ====================
+    async function renderPageToImage(pageNum) {
       const page = await pdfDoc.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 }); // 1.5x 保证清晰度
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
-      return canvas.toDataURL('image/jpeg', quality);
+      const maxW = 1800;
+      const vp = page.getViewport({ scale: 1.5 });
+      const scale = vp.width > maxW ? maxW / vp.width : 1.5;
+      const fvp = scale === 1.5 ? vp : page.getViewport({ scale });
+      const c = document.createElement('canvas');
+      c.width = fvp.width; c.height = fvp.height;
+      await page.render({ canvasContext: c.getContext('2d'), viewport: fvp }).promise;
+      return c.toDataURL('image/jpeg', 0.7);
     }
 
     async function renderAllPages() {
       const pagesToRender = Math.min(totalPages, MAX_PAGES);
-      // 页数多时降低质量
-      const quality = totalPages > MAX_PAGES ? 0.6 : 0.8;
       const images = [];
-
       document.getElementById('renderBarContainer').classList.remove('hidden');
-      document.getElementById('renderProgress').style.width = '0%';
-      document.getElementById('renderPercent').textContent = '0%';
-      document.getElementById('renderLabel').textContent = `正在渲染第 0/${pagesToRender} 页`;
-
+      const pg = document.getElementById('renderProgress'), pct = document.getElementById('renderPercent'), lbl = document.getElementById('renderLabel');
+      pg.style.width = '0%'; pct.textContent = '0%';
       for (let i = 0; i < pagesToRender; i++) {
-        // 每 5 页暂停一下让 UI 更新 (requestAnimationFrame)
-        if (i > 0 && i % 5 === 0) {
-          await new Promise(r => requestAnimationFrame(r));
-        }
-
-        const img = await renderPageToImage(i + 1, quality);
-        images.push(img);
-
-        const progress = Math.round(((i + 1) / pagesToRender) * 100);
-        document.getElementById('renderProgress').style.width = progress + '%';
-        document.getElementById('renderPercent').textContent = progress + '%';
-        document.getElementById('renderLabel').textContent = `正在渲染第 ${i + 1}/${pagesToRender} 页`;
-        updateStepMessage('step1', `已渲染 ${i + 1}/${pagesToRender} 页`);
+        if (i > 0 && i % 5 === 0) await new Promise(r => requestAnimationFrame(r));
+        images.push(await renderPageToImage(i + 1));
+        const prog = Math.round(((i+1)/pagesToRender)*100);
+        pg.style.width = prog+'%'; pct.textContent = prog+'%';
+        lbl.textContent = `渲染第 ${i+1}/${pagesToRender} 页`;
+        updateStepMessage('step1', `已渲染 ${i+1}/${pagesToRender} 页`);
       }
-
       return images;
     }
 
-    // ==================== 开始审查 ====================
+    // ==================== 发送单批 ====================
+    async function sendBatch(images, batchIndex, totalBatches, apiKey) {
+      const body = JSON.stringify({ images, apiKey, dimensions: getDims(), batchIndex, totalBatches });
+      const ctrl = new AbortController();
+      const timeout = setTimeout(() => ctrl.abort(), BATCH_TIMEOUT_MS);
+
+      try {
+        const resp = await fetch('/api/review', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body, signal: ctrl.signal
+        });
+        clearTimeout(timeout);
+        if (!resp.ok) {
+          const et = await resp.text();
+          let em = et; try { em = JSON.parse(et).error || et; } catch (_) {}
+          throw new Error(`批次${batchIndex+1} 服务器错误(${resp.status}): ${em}`);
+        }
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let buf = '', content = '';
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+          const lines = buf.split('\n'); buf = lines.pop() || '';
+          for (let li = 0; li < lines.length; li++) {
+            if (lines[li].startsWith('event: ')) {
+              const et = lines[li].slice(7).trim();
+              if (li+1 < lines.length && lines[li+1].startsWith('data: ')) {
+                try {
+                  const d = JSON.parse(lines[li+1].slice(6));
+                  if (et === 'content') { content += d.content || ''; }
+                  if (et === 'done') return { success: true, content, batchIndex };
+                  if (et === 'error') throw new Error(d.error || '批次审查失败');
+                } catch (e) { if (e.message && !e.message.startsWith('批次')) throw e; }
+                li++;
+              }
+            }
+          }
+        }
+        // 处理残存
+        if (buf.trim()) {
+          const rl = buf.split('\n');
+          for (let i = 0; i < rl.length; i++) {
+            if (rl[i].startsWith('event: ') && i+1 < rl.length && rl[i+1].startsWith('data: ')) {
+              try { const d = JSON.parse(rl[i+1].slice(6)); if (rl[i].includes('content')) content += d.content || ''; } catch (_) {}
+              i++;
+            }
+          }
+        }
+        return { success: true, content, batchIndex };
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    // ==================== 主流程 ====================
     async function startReview() {
       if (!selectedFile || isReviewing || !pdfDoc) return;
       const apiKey = document.getElementById('apiKeyInput').value.trim();
-      if (!apiKey) { showToast('请输入 Kimi API Key', 'error'); return; }
+      if (!apiKey) { showToast('请输入 API Key','error'); return; }
       localStorage.setItem('kimiApiKey', apiKey);
 
-      isReviewing = true;
-      fullReportContent = '';
-      reviewAbortController = new AbortController();
-      reviewStartTime = Date.now();
+      isReviewing = true; reviewAbortController = new AbortController(); reviewStartTime = Date.now();
+      allImages = []; batchContents = []; fullSummaryContent = ''; currentBatchIndex = 0;
 
-      document.getElementById('reportSection').classList.add('hidden');
-      document.getElementById('reportContent').innerHTML = '';
+      // UI 重置
+      document.getElementById('summarySection').classList.add('hidden');
+      document.getElementById('summaryContent').innerHTML = '';
+      document.getElementById('batchResultsSection').classList.add('hidden');
+      document.getElementById('batchResultsList').innerHTML = '';
       document.getElementById('errorSection').classList.add('hidden');
       document.getElementById('progressSection').classList.remove('hidden');
       resetSteps();
       document.getElementById('renderBarContainer').classList.add('hidden');
-      document.getElementById('renderProgress').style.width = '0%';
       document.getElementById('timerDisplay').classList.remove('hidden');
       document.getElementById('stopBtn').classList.remove('hidden');
       startTimer();
@@ -402,126 +329,159 @@
       document.getElementById('startBtnLoading').classList.remove('hidden');
 
       try {
-        // 步骤 1：渲染页面
+        // 步骤 1：渲染全部页面
         setStepActive('step1');
         updateStepMessage('step1', '正在将 PDF 渲染为图片...');
-        const images = await renderAllPages();
+        allImages = await renderAllPages();
         setStepDone('step1');
-        updateStepMessage('step1', `已渲染 ${images.length}/${Math.min(totalPages, MAX_PAGES)} 页为图片`);
+        updateStepMessage('step1', `已渲染 ${allImages.length} 页为图片`);
         document.getElementById('renderBarContainer').classList.add('hidden');
 
-        // 发送 JSON
-        const reqBody = JSON.stringify({
-          images: images,
-          apiKey: apiKey,
-          dimensions: getSelectedDimensions(),
-          totalPages: totalPages,
-        });
+        // 分批次
+        const totalBatches = Math.ceil(allImages.length / BATCH_SIZE);
+        batchContents = new Array(totalBatches).fill('');
 
-        const response = await fetch('/api/review', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: reqBody,
-          signal: reviewAbortController.signal,
-        });
+        // 初始化批次点
+        const dotsEl = document.getElementById('batchDots');
+        dotsEl.innerHTML = Array.from({length: totalBatches}, (_, i) => `<span class="batch-dot waiting" id="batchDot${i}" title="第${i+1}批"></span>`).join('');
+        setStepActive('step2');
+        updateStepMessage('step2', `准备审查 ${totalBatches} 批...`);
+        document.getElementById('batchResultsSection').classList.remove('hidden');
 
-        if (!response.ok) {
-          const errText = await response.text();
-          let errMsg = errText;
-          try { errMsg = JSON.parse(errText).error || errText; } catch (_) {}
-          throw new Error(`服务器错误 (${response.status}): ${errMsg}`);
-        }
+        // 串行发送每批
+        for (let bi = 0; bi < totalBatches; bi++) {
+          if (reviewAbortController.signal.aborted) break;
+          currentBatchIndex = bi;
 
-        // SSE 解析
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let buffer = '';
+          const start = bi * BATCH_SIZE;
+          const end = Math.min(start + BATCH_SIZE, allImages.length);
+          const batchImages = allImages.slice(start, end);
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-          for (let li = 0; li < lines.length; li++) {
-            if (lines[li].startsWith('event: ')) {
-              const eventType = lines[li].slice(7).trim();
-              if (li + 1 < lines.length && lines[li + 1].startsWith('data: ')) {
-                try { handleSSEEvent(eventType, JSON.parse(lines[li + 1].slice(6))); } catch (_) {}
-                li++;
-              }
-            }
+          updateStepMessage('step2', `正在审查第 ${bi+1}/${totalBatches} 批（第 ${start+1}-${end} 页）...`);
+          document.getElementById('batchDot'+bi).classList.remove('waiting');
+          document.getElementById('batchDot'+bi).classList.add('active');
+
+          // 创建批次结果卡片
+          const list = document.getElementById('batchResultsList');
+          const cardId = `batchCard${bi}`;
+          const existing = document.getElementById(cardId);
+          if (!existing) {
+            const card = document.createElement('div');
+            card.id = cardId;
+            card.className = 'card p-4 animate-in';
+            card.innerHTML = `<h4 class="font-semibold text-sm text-slate-600 dark:text-slate-300 mb-2">📑 第 ${bi+1}/${totalBatches} 批（第 ${start+1}-${end} 页）<span class="ml-2 text-xs text-slate-400">审查中...</span></h4><div class="report-content text-sm batch-content"></div>`;
+            list.appendChild(card);
           }
+
+          const result = await sendBatch(batchImages, bi, totalBatches, apiKey);
+          batchContents[bi] = result.content;
+
+          // 更新卡片
+          const card = document.getElementById(cardId);
+          if (card) {
+            const contentEl = card.querySelector('.batch-content');
+            contentEl.innerHTML = renderMarkdownToHtml(result.content);
+            card.querySelector('h4 span').textContent = '✅ 完成';
+            card.querySelector('h4 span').className = 'ml-2 text-xs text-green-500';
+          }
+
+          document.getElementById('batchDot'+bi).classList.remove('active');
+          document.getElementById('batchDot'+bi).classList.add('done');
+          updateStepMessage('step2', `已完成 ${bi+1}/${totalBatches} 批`);
         }
-        if (buffer.trim()) {
-          const rl = buffer.split('\n');
-          for (let i = 0; i < rl.length; i++) {
-            if (rl[i].startsWith('event: ')) {
-              const et = rl[i].slice(7).trim();
-              if (i + 1 < rl.length && rl[i + 1].startsWith('data: ')) {
-                try { handleSSEEvent(et, JSON.parse(rl[i + 1].slice(6))); } catch (_) {}
-                i++;
+
+        if (!reviewAbortController.signal.aborted) {
+          setStepDone('step2');
+          updateStepMessage('step2', `${totalBatches} 批全部审查完成`);
+
+          // 步骤 3：汇总
+          setStepActive('step3');
+          updateStepMessage('step3', '正在生成最终汇总报告...');
+          document.getElementById('summarySection').classList.remove('hidden');
+
+          const validContents = batchContents.filter(c => c && c.trim());
+          if (validContents.length > 0) {
+            const summaryBody = JSON.stringify({
+              summary: true,
+              batchResults: validContents,
+              apiKey,
+              dimensions: getDims(),
+            });
+
+            const ctrl2 = new AbortController();
+            const to2 = setTimeout(() => ctrl2.abort(), BATCH_TIMEOUT_MS * 2);
+            const resp2 = await fetch('/api/review', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' }, body: summaryBody, signal: ctrl2.signal
+            });
+            clearTimeout(to2);
+
+            if (!resp2.ok) throw new Error('汇总请求失败');
+            const reader2 = resp2.body.getReader();
+            const decoder2 = new TextDecoder('utf-8');
+            let buf2 = '';
+            document.getElementById('summaryContent').innerHTML = '<p class="text-slate-400">生成中...</p>';
+
+            while (true) {
+              const { done, value } = await reader2.read();
+              if (done) break;
+              buf2 += decoder2.decode(value, { stream: true });
+              const lines = buf2.split('\n'); buf2 = lines.pop() || '';
+              for (let li = 0; li < lines.length; li++) {
+                if (lines[li].startsWith('event: ')) {
+                  const et = lines[li].slice(7).trim();
+                  if (li+1 < lines.length && lines[li+1].startsWith('data: ')) {
+                    try {
+                      const d = JSON.parse(lines[li+1].slice(6));
+                      if (et === 'content') { fullSummaryContent += d.content || ''; renderSummary(); }
+                      if (et === 'done') { setStepDone('step3'); updateStepMessage('step3', '汇总完成'); }
+                      if (et === 'error') throw new Error(d.error);
+                    } catch (e) { if (e.message && e.message.includes('汇总')) throw e; }
+                    li++;
+                  }
+                }
               }
             }
           }
         }
       } catch (err) {
         if (err.name === 'AbortError') {
-          setStepError('step2', '用户停止审查');
+          showError('审查已停止');
         } else {
           showError(err.message);
+          if (currentBatchIndex < batchContents.length) {
+            document.getElementById('batchDot'+currentBatchIndex).classList.remove('active');
+            document.getElementById('batchDot'+currentBatchIndex).classList.add('failed');
+          }
         }
       } finally {
         finishReview();
       }
     }
 
-    function handleSSEEvent(eventType, data) {
-      switch (eventType) {
-        case 'stage':
-          if (data.stage === 'review') {
-            setStepActive('step2');
-            updateStepMessage('step2', data.message || 'AI 视觉模型审查中...');
-            document.getElementById('reportSection').classList.remove('hidden');
-          }
-          break;
-        case 'content':
-          fullReportContent += data.content || '';
-          renderReport(fullReportContent);
-          break;
-        case 'done':
-          setStepDone('step2');
-          updateStepMessage('step2', data.message || '审查完成');
-          stopTimer();
-          saveToHistory(fullReportContent);
-          break;
-        case 'error':
-          showError(data.error || '未知错误');
-          setStepError('step2', data.error);
-          break;
-      }
+    function renderSummary() {
+      document.getElementById('summaryContent').innerHTML = renderMarkdownToHtml(fullSummaryContent);
     }
 
-    function resetSteps() {
-      ['step1','step2'].forEach(id => {
-        document.getElementById(id).classList.remove('active','done','error');
-        document.getElementById(id+'Msg').textContent = '等待中...';
-      });
-    }
-    function setStepActive(id) { const el = document.getElementById(id); el.classList.remove('done','error'); el.classList.add('active'); }
-    function setStepDone(id) { const el = document.getElementById(id); el.classList.remove('active','error'); el.classList.add('done'); }
-    function setStepError(id, msg) { const el = document.getElementById(id); el.classList.remove('active','done'); el.classList.add('error'); updateStepMessage(id, msg || '出错'); }
-    function updateStepMessage(id, msg) { document.getElementById(id+'Msg').textContent = msg; }
-
-    function renderReport(md) {
-      const c = document.getElementById('reportContent');
+    function renderMarkdownToHtml(md) {
       let h = md.replace(/✅/g, '<span style="color:#22c55e;font-size:1.2em;">✅</span>')
                 .replace(/❌/g, '<span style="color:#ef4444;font-size:1.2em;">❌</span>')
                 .replace(/⚠️/g, '<span style="color:#f59e0b;font-size:1.2em;">⚠️</span>')
                 .replace(/⚠/g, '<span style="color:#f59e0b;font-size:1.2em;">⚠</span>');
-      try { c.innerHTML = marked.parse(h); } catch (_) { c.innerHTML = `<pre>${escapeHtml(md)}</pre>`; }
-      c.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      try { return marked.parse(h); } catch (_) { return `<pre>${escapeHtml(md)}</pre>`; }
     }
+
+    // ==================== UI 辅助 ====================
+    function resetSteps() {
+      ['step1','step2','step3'].forEach(id => {
+        document.getElementById(id).classList.remove('active','done','error');
+        document.getElementById(id+'Msg').textContent = '等待中...';
+      });
+      document.getElementById('batchDots').innerHTML = '';
+    }
+    function setStepActive(id) { const el = document.getElementById(id); el.classList.remove('done','error'); el.classList.add('active'); }
+    function setStepDone(id) { const el = document.getElementById(id); el.classList.remove('active','error'); el.classList.add('done'); }
+    function setStepError(id, msg) { const el = document.getElementById(id); el.classList.remove('active','done'); el.classList.add('error'); updateStepMessage(id, msg||'出错'); }
+    function updateStepMessage(id, msg) { document.getElementById(id+'Msg').textContent = msg; }
 
     function finishReview() {
       isReviewing = false; stopTimer(); reviewAbortController = null;
@@ -530,22 +490,22 @@
       document.getElementById('stopBtn').classList.add('hidden');
       document.getElementById('renderBarContainer').classList.add('hidden');
       updateStartButton();
-      if (!fullReportContent && document.getElementById('errorSection').classList.contains('hidden')) {
-        showError('审查未返回任何内容，请重试');
-      }
     }
 
     function resetReview() {
-      isReviewing = false; stopTimer(); reviewAbortController = null;
+      isReviewing=false;stopTimer();reviewAbortController=null;
       document.getElementById('progressSection').classList.add('hidden');
       document.getElementById('errorSection').classList.add('hidden');
-      document.getElementById('reportSection').classList.add('hidden');
-      document.getElementById('reportContent').innerHTML = '';
+      document.getElementById('summarySection').classList.add('hidden');
+      document.getElementById('summaryContent').innerHTML='';
+      document.getElementById('batchResultsSection').classList.add('hidden');
+      document.getElementById('batchResultsList').innerHTML='';
       document.getElementById('renderBarContainer').classList.add('hidden');
       document.getElementById('startBtnText').classList.remove('hidden');
       document.getElementById('startBtnLoading').classList.add('hidden');
       document.getElementById('stopBtn').classList.add('hidden');
-      fullReportContent = ''; updateStartButton();
+      allImages=[];batchContents=[];fullSummaryContent='';currentBatchIndex=0;
+      updateStartButton();
     }
 
     function stopReview() { if (reviewAbortController) reviewAbortController.abort(); }
@@ -555,61 +515,49 @@
 
     // ==================== 下载/复制 ====================
     function downloadReport(fmt) {
-      if (!fullReportContent) { showToast('无报告内容', 'error'); return; }
+      const separator = '\n\n---\n\n';
+      const content = fullSummaryContent || batchContents.filter(Boolean).join(separator);
+      if (!content) { showToast('无内容','error'); return; }
       const now = new Date();
       const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
       const bn = `财务审查报告_${ts}`;
-      let content, filename, mime;
-      if (fmt === 'md') { content = fullReportContent; filename = bn+'.md'; mime = 'text/markdown'; }
-      else { content = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>审查报告</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;max-width:900px;margin:0 auto;padding:40px 20px;color:#0f172a;line-height:1.8}h1{color:#1a56db;border-bottom:2px solid #e2e8f0}h2{color:#1e3a8a}table{width:100%;border-collapse:collapse}th{background:#1a56db;color:#fff;padding:10px;text-align:left}td{padding:10px;border-bottom:1px solid #e2e8f0}code{background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#e11d48}pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px}blockquote{border-left:4px solid #1a56db;padding:8px 16px;background:#eef2ff}</style></head><body>${marked.parse(fullReportContent)}<footer style="margin-top:40px;padding-top:20px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:13px"><p>由财务 PDF 智能审查系统生成 | ${now.toLocaleString('zh-CN')}</p></footer></body></html>`; filename = bn+'.html'; mime = 'text/html'; }
-      const blob = new Blob([content],{type:mime});
+      let c, fn, m;
+      if (fmt==='md') { c=content; fn=bn+'.md'; m='text/markdown'; }
+      else {
+        const html = renderMarkdownToHtml(content);
+        c=`<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>审查报告</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;max-width:900px;margin:0 auto;padding:40px 20px;color:#0f172a;line-height:1.8}h1{color:#1a56db;border-bottom:2px solid #e2e8f0}table{width:100%;border-collapse:collapse}th{background:#1a56db;color:#fff;padding:10px;text-align:left}td{padding:10px;border-bottom:1px solid #e2e8f0}code{background:#f1f5f9;padding:2px 6px;border-radius:4px;color:#e11d48}pre{background:#1e293b;color:#e2e8f0;padding:16px;border-radius:8px}blockquote{border-left:4px solid #1a56db;padding:8px 16px;background:#eef2ff}</style></head><body>${html}<footer style="margin-top:40px;padding-top:20px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:13px">由财务 PDF 智能审查系统生成 | ${now.toLocaleString('zh-CN')}</footer></body></html>`;
+        fn=bn+'.html'; m='text/html';
+      }
+      const blob = new Blob([c],{type:m});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      const a = document.createElement('a'); a.href=url; a.download=fn; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
       showToast('下载完成','success');
     }
 
-    function copyReport() {
-      if (!fullReportContent) { showToast('无内容','error'); return; }
-      navigator.clipboard.writeText(fullReportContent).then(()=>showToast('已复制','success')).catch(()=>showToast('复制失败','error'));
+    function copyFullReport() {
+      const separator = '\n\n---\n\n';
+      const content = fullSummaryContent || batchContents.filter(Boolean).join(separator);
+      if (!content) { showToast('无内容','error'); return; }
+      navigator.clipboard.writeText(content).then(()=>showToast('已复制','success')).catch(()=>showToast('复制失败','error'));
     }
 
-    // ==================== 历史记录 ====================
-    function saveToHistory(content) {
-      const history = JSON.parse(localStorage.getItem('reviewHistory')||'[]');
-      history.unshift({ id:Date.now(), date:new Date().toLocaleString('zh-CN'), fileName:selectedFile?selectedFile.name:'未知', fileSize:selectedFile?formatFileSize(selectedFile.size):'', pageCount:totalPages, preview:content.substring(0,200)+'...', fullContent:content, elapsed:Math.floor((Date.now()-reviewStartTime)/1000) });
-      if (history.length>20) history.length=20;
-      localStorage.setItem('reviewHistory',JSON.stringify(history));
-      renderHistory();
-    }
+    // ==================== 历史 ====================
+    function saveToHistory(content) { /* 简化，暂不保存分批结果 */ }
+    function renderHistory() { document.getElementById('historyList').innerHTML='<p class="text-sm text-slate-400 text-center py-4">暂无记录</p>'; }
+    function toggleHistory() { const p=document.getElementById('historyPanel'); p.classList.toggle('hidden'); if(!p.classList.contains('hidden')){renderHistory();} }
+    function clearHistory() { localStorage.removeItem('reviewHistory'); renderHistory(); }
 
-    function renderHistory() {
-      const h = JSON.parse(localStorage.getItem('reviewHistory')||'[]');
-      const l = document.getElementById('historyList');
-      if (!h.length) { l.innerHTML='<p class="text-sm text-slate-400 text-center py-4">暂无记录</p>'; return; }
-      l.innerHTML = h.map((item,i)=>`
-        <div class="flex items-start justify-between p-3 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer" onclick="viewHistory(${i})">
-          <div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${escapeHtml(item.fileName)}</p><p class="text-xs text-slate-400">${item.date} · ${item.fileSize} · ${item.pageCount||'?'}页 · ${item.elapsed}秒</p><p class="text-xs text-slate-500 truncate mt-1">${escapeHtml(item.preview)}</p></div>
-          <button onclick="event.stopPropagation();deleteHistoryItem(${item.id})" class="text-slate-400 hover:text-red-500 p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-        </div>`).join('');
-    }
-
-    function toggleHistory() { const p=document.getElementById('historyPanel'); p.classList.toggle('hidden'); if(!p.classList.contains('hidden')){renderHistory();p.scrollIntoView({behavior:'smooth'});} }
-    function viewHistory(i) { const h=JSON.parse(localStorage.getItem('reviewHistory')||'[]'); const it=h[i]; if(!it)return; fullReportContent=it.fullContent; document.getElementById('reportSection').classList.remove('hidden'); renderReport(fullReportContent); document.getElementById('historyPanel').classList.add('hidden'); document.getElementById('reportSection').scrollIntoView({behavior:'smooth'}); }
-    function deleteHistoryItem(id) { const h=JSON.parse(localStorage.getItem('reviewHistory')||'[]'); localStorage.setItem('reviewHistory',JSON.stringify(h.filter(it=>it.id!==id))); renderHistory(); }
-    function clearHistory() { if(confirm('清空所有历史？')){localStorage.removeItem('reviewHistory');renderHistory();} }
-
+    // ==================== 工具 ====================
     function showToast(msg,type='info') {
       const colors={success:'bg-green-500',error:'bg-red-500',info:'bg-primary-600'};
       const t=document.createElement('div');
       t.className=`fixed bottom-6 right-6 z-50 px-5 py-3 rounded-lg text-white text-sm font-medium shadow-lg animate-in ${colors[type]||colors.info}`;
       t.textContent=msg; document.body.appendChild(t);
-      setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(()=>t.remove(),300);},2500);
+      setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2500);
     }
-
     function formatFileSize(b) { if(!b)return'0 B'; const k=1024,s=['B','KB','MB','GB']; const i=Math.floor(Math.log(b)/Math.log(k)); return parseFloat((b/Math.pow(k,i)).toFixed(2))+' '+s[i]; }
     function escapeHtml(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
-
-    window.addEventListener('beforeunload',()=>{ if(reviewAbortController)reviewAbortController.abort(); stopTimer(); });
+    window.addEventListener('beforeunload',()=>{if(reviewAbortController)reviewAbortController.abort();stopTimer();});
   </script>
 </body>
 </html>

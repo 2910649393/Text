@@ -1,7 +1,5 @@
 const fetch = require("node-fetch");
 
-// 不再需要 FormData（不再上传文件到 Kimi Files API）
-
 // Kimi API 基础 URL
 const KIMI_API_BASE = "https://api.moonshot.cn/v1";
 
@@ -30,11 +28,12 @@ function readRawBody(req) {
 function sendSSE(res, event, data) {
   try {
     res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
-  } catch (_) { /* 连接可能已断开 */ }
+  } catch (_) { /* 连接已断开 */ }
 }
 
-// ==================== 系统提示词 ====================
+// ==================== 提示词 ====================
 
+// 基础审查系统提示词（CPA 三任务）
 function buildSystemPrompt(dimensions) {
   const dims = (dimensions || "").split(",").map((d) => d.trim()).filter(Boolean);
 
@@ -48,72 +47,85 @@ function buildSystemPrompt(dimensions) {
     ? "请完成全部三项任务。"
     : `请注意：用户仅选择了 ${selectedTasks.join("、")}，请只输出这些任务的审查结果，跳过未被选中的任务。`;
 
-  return `你是一名具备注册会计师（CPA）资质的财务报告审查专家，同时精通中英文排版规范。现在请你对所提供的PDF财务报告图片（含全部附注、管理层讨论及补充信息）进行逐页审查，并严格按照以下三项任务输出最终结论。
-
-【审查范围】
-- 文件内容：完整的年度财务报告（含合并财务报表、附注、董事报告、审计报告、补充信息）。
-- 重点关注：合并财务状况表（资产负债表）及其附注、全文标点符号与格式。
+  return `你是一名具备注册会计师（CPA）资质的财务报告审查专家，同时精通中英文排版规范。你正在审查一份PDF财务报告（含合并财务报表、附注、董事报告、审计报告、补充信息）。请严格按以下三项任务逐页审查并输出结论。
 
 ${taskInstruction}
 
 【任务一：审查合并财务状况表各字段是否有数据计算错误】
-1. 逐项验证"总资产"是否等于各资产科目加总（包含所有明细行）。
+1. 逐项验证"总资产"是否等于各资产科目加总。
 2. 逐项验证"总负债"是否等于各负债科目加总。
-3. 逐项验证"总权益"是否等于各权益科目加总（注意股本、储备、累计亏损等正负号）。
-4. 验证会计恒等式：总资产 = 总负债 + 总权益。
-5. 验证"净流动资产/总资产"等派生指标（如有）是否基于上述数据正确计算。
-6. 检查是否存在因四舍五入（千港元）导致的1-2单位差异，若存在需说明是否可接受。
+3. 逐项验证"总权益"是否等于各权益科目加总。
+4. 验证：总资产 = 总负债 + 总权益。
+5. 验证"净流动资产/总资产"等派生指标是否计算正确。
+6. 检查四舍五入（千港元）导致的1-2单位差异。
 
 【任务二：审查合并财务状况表与附注内容是否一致】
-1. 将财务状况表中的每个资产、负债、权益科目金额，与对应附注中的"合计"金额逐项比对。
-2. 检查附注中披露的明细加总是否等于附注总计，且该总计与财务状况表科目完全一致。
-3. 检查附注中是否存在额外披露的金融工具未在财务状况表中列示，但应在表内确认的情况。
-4. 检查附注中的重分类、期初余额调整等是否已正确反映在财务状况表中。
+1. 将财务状况表中的各科目金额与对应附注"合计"逐项比对。
+2. 检查附注明细加总是否等于财务状况表对应科目。
+3. 检查是否有金融工具在附注披露但未在表内列示。
 
 【任务三：审查整个文件是否存在标点符号和格式的错误】
-1. 标点符号错误包括：中英文标点混用、多余反斜杠/转义符、数字分隔符错误、括号引号不匹配、英文连字符缺失或多余、日期格式不统一、缩写首次出现未定义、重复的句子或段落。
-2. 格式错误包括：表格线条缺失或合并单元格错位、数字未按小数点对齐、标题编号重复或跳号、页眉页脚信息错乱、字体不一致、段落缩进不统一或换行异常、表格跨页断开后未重印表头、图表编号与引用不符。
+1. 标点：中英文标点混用、括号引号不匹配、连字符缺失/多余、日期格式不统一、重复句子段落。
+2. 格式：表格线条缺失、数字未对齐、标题编号重复/跳号、字体不一致、换行异常。
 
 【输出要求】
-每项结论必须明确打"✅"或"❌"，并附具体证据说明。所有金额必须带单位（千港元），注明年份。最终输出需简洁明了，只给出结论和关键证据。`;
+每项结论打"✅"或"❌"，附具体证据（金额带单位"千港元"）。只输出结论和关键证据，简洁明了。`;
 }
 
-// ==================== Kimi 视觉 Chat API ====================
+// 汇总审查系统提示词
+function buildSummaryPrompt() {
+  return `你是一名具备注册会计师（CPA）资质的财务审查专家。以下是对一份多页财务报告分批次审查的结果汇总。请将这些分散的审查发现整合为一份统一的最终审查报告，按照以下结构组织：
 
-async function* streamVisionChat(apiKey, systemPrompt, images, totalPages, maxImages) {
-  // 构建 user content 数组
-  const userContent = [];
+### 📊 任务一：数据计算错误审查
+（汇总各批次的计算错误发现，给出总体✅或❌结论）
 
-  // 文本说明
-  let introText = "请严格按系统提示词中的要求，审查以下PDF财务报告的每一页内容：";
-  if (images.length < totalPages) {
-    introText = `由于页数限制（最多${maxImages}页），仅审查了前${images.length}页（共${totalPages}页）。请基于这${images.length}页进行审查：`;
+### 🔗 任务二：主表与附注一致性审查
+（汇总各批次的一致性发现，给出总体✅或❌结论）
+
+### 📝 任务三：标点符号与格式错误审查
+（汇总各批次的格式错误发现，给出总体✅或❌结论）
+
+### 📋 最终结论
+（三任务汇总，给出整体评价）
+
+如果有跨批次的数据关联（如同一科目在多个批次中出现），请一并指出并验证一致性。`;
+}
+
+// ==================== 批次用户消息构建 ====================
+
+function buildBatchUserContent(images, batchIndex, totalBatches) {
+  const totalPages = totalBatches * images.length; // 估算
+  const startPage = batchIndex * images.length + 1;
+  const endPage = startPage + images.length - 1;
+
+  let batchText;
+  if (totalBatches === 1) {
+    batchText = "请严格按系统提示词的要求，审查以下财务报告的每一页内容：";
+  } else if (batchIndex === 0) {
+    batchText = `这是财务报告的第 ${startPage}-${endPage} 页（第 ${batchIndex + 1}/${totalBatches} 批），请先审查这部分内容。请只输出本批次涉及的审查发现，最后不要写汇总结论。`;
+  } else if (batchIndex === totalBatches - 1) {
+    batchText = `这是财务报告的第 ${startPage}-${endPage} 页（最后一批，第 ${batchIndex + 1}/${totalBatches} 批）。请继续审查这部分内容，只输出本批次的新发现（不要重复之前已审查的内容）。审查完本批后，请给出针对本批次的三任务小结。`;
+  } else {
+    batchText = `这是财务报告的第 ${startPage}-${endPage} 页（第 ${batchIndex + 1}/${totalBatches} 批）。请继续审查这部分内容，只输出本批次的新发现，不要重复之前已审查的内容，也不要写最终汇总结论。`;
   }
-  userContent.push({ type: "text", text: introText });
 
-  // 逐页添加图片
-  for (let i = 0; i < images.length; i++) {
-    userContent.push({
-      type: "image_url",
-      image_url: { url: images[i] },
-    });
+  const userContent = [{ type: "text", text: batchText }];
+  for (const img of images) {
+    userContent.push({ type: "image_url", image_url: { url: img } });
   }
+  return userContent;
+}
 
+// ==================== Kimi API 调用 ====================
+
+async function* streamKimiChat(apiKey, model, messages, temperature = 0.3) {
   const response = await fetch(`${KIMI_API_BASE}/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({
-      model: "kimi-k2.6",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userContent },
-      ],
-      stream: true,
-      temperature: 0.3,
-    }),
+    body: JSON.stringify({ model, messages, stream: true, temperature }),
   });
 
   if (!response.ok) {
@@ -121,7 +133,6 @@ async function* streamVisionChat(apiKey, systemPrompt, images, totalPages, maxIm
     throw new Error(`Kimi Chat API 调用失败 (${response.status}): ${errorText}`);
   }
 
-  // 逐行读取 SSE 流
   let buffer = "";
   for await (const chunk of response.body) {
     buffer += chunk.toString("utf-8");
@@ -131,30 +142,23 @@ async function* streamVisionChat(apiKey, systemPrompt, images, totalPages, maxIm
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed || !trimmed.startsWith("data:")) continue;
-
       const jsonStr = trimmed.slice(5).trim();
       if (jsonStr === "[DONE]") return;
-
       try {
         const parsed = JSON.parse(jsonStr);
         const delta = parsed.choices?.[0]?.delta;
-        if (delta?.content) {
-          yield { type: "content", content: delta.content };
-        }
+        if (delta?.content) yield { type: "content", content: delta.content };
       } catch (_) { /* skip */ }
     }
   }
 
-  // 处理缓冲区中剩余的内容
   if (buffer.trim()) {
     const trimmed = buffer.trim();
     if (trimmed.startsWith("data:") && !trimmed.includes("[DONE]")) {
       try {
         const parsed = JSON.parse(trimmed.slice(5).trim());
         const delta = parsed.choices?.[0]?.delta;
-        if (delta?.content) {
-          yield { type: "content", content: delta.content };
-        }
+        if (delta?.content) yield { type: "content", content: delta.content };
       } catch (_) { /* ignore */ }
     }
   }
@@ -166,7 +170,7 @@ const handler = async function (req, res) {
   // CORS 头
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-API-Key, X-Dimensions, X-File-Name, X-Total-Pages");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-API-Key, X-Dimensions, X-Total-Pages");
   res.setHeader("Access-Control-Expose-Headers", "*");
 
   if (req.method === "OPTIONS") {
@@ -180,65 +184,83 @@ const handler = async function (req, res) {
     return;
   }
 
-  const contentType = (req.headers["content-type"] || "").toLowerCase();
-
-  // ==================== 解析参数 ====================
-  let apiKey = req.headers["x-api-key"] || "";
-  let dimensions = decodeURIComponentSafe(req.headers["x-dimensions"]) || "计算错误,附注一致性,标点格式";
-  let totalPages = parseInt(req.headers["x-total-pages"] || "0", 10);
-
-  const MAX_IMAGES = 20; // Kimi k2.6 单次最多约 20 张图
-  const MAX_SINGLE_IMAGE_SIZE = 10 * 1024 * 1024; // 单张 base64 不超过 ~10MB
+  const MAX_IMAGES_PER_BATCH = 10;
 
   try {
     const rawBody = await readRawBody(req);
-    let images = [];
+    if (rawBody.length === 0) {
+      sendJSON(res, 400, { error: "请求体为空" });
+      return;
+    }
 
-    // 解析 JSON body
-    if (rawBody.length > 0) {
-      try {
-        const json = JSON.parse(rawBody.toString("utf-8"));
-        if (json.images && Array.isArray(json.images)) {
-          images = json.images;
-        }
-        if (json.apiKey) apiKey = apiKey || json.apiKey;
-        if (json.dimensions) dimensions = dimensions || json.dimensions;
-        if (json.totalPages) totalPages = totalPages || json.totalPages;
-      } catch (e) {
-        // 如果 JSON 解析失败，尝试从 Header 获取（兼容旧版 raw binary）
-        // 但新版不需要这个回退了，直接报错
+    const json = JSON.parse(rawBody.toString("utf-8"));
+
+    // 解析参数
+    let apiKey = req.headers["x-api-key"] || json.apiKey || process.env.MOONSHOT_API_KEY || "";
+    let dimensions = decodeURIComponentSafe(req.headers["x-dimensions"]) || json.dimensions || "计算错误,附注一致性,标点格式";
+    const summaryMode = json.summary === true;
+    const batchResults = json.batchResults || [];
+    const images = json.images || [];
+    const batchIndex = json.batchIndex || 0;
+    const totalBatches = json.totalBatches || 1;
+
+    if (!apiKey) {
+      sendJSON(res, 400, { error: "缺少 API Key" });
+      return;
+    }
+
+    // ==================== 汇总模式 ====================
+    if (summaryMode) {
+      if (!batchResults || batchResults.length === 0) {
+        sendJSON(res, 400, { error: "汇总模式缺少 batchResults" });
+        return;
       }
-    }
 
-    // 环境变量兜底
-    if (!apiKey) {
-      apiKey = process.env.MOONSHOT_API_KEY || "";
-    }
+      // SSE 流式输出
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache, no-transform");
+      res.setHeader("Connection", "keep-alive");
+      res.setHeader("X-Accel-Buffering", "no");
 
-    // ==================== 参数校验 ====================
-    if (!apiKey) {
-      sendJSON(res, 400, {
-        error: "缺少 API Key，请在前端输入 API Key 或设置 MOONSHOT_API_KEY 环境变量",
-      });
+      try {
+        sendSSE(res, "stage", { stage: "summary", message: "正在生成最终汇总报告..." });
+
+        const summaryContent = batchResults
+          .map((r, i) => `## 第 ${i + 1} 批审查结果\n\n${r}`)
+          .join("\n\n---\n\n");
+
+        const stream = streamKimiChat(apiKey, "kimi-k2.6", [
+          { role: "system", content: buildSummaryPrompt() },
+          { role: "user", content: `请将以下${batchResults.length}批次的审查结果整合为一份统一的最终审查报告：\n\n${summaryContent}` },
+        ]);
+
+        for await (const event of stream) {
+          sendSSE(res, "content", { content: event.content });
+        }
+        sendSSE(res, "done", { message: "汇总完成" });
+      } catch (err) {
+        console.error("汇总出错:", err);
+        let errMsg = err.message || "未知错误";
+        if (errMsg.includes("token") || errMsg.includes("context length") || errMsg.includes("too long")) {
+          errMsg = "批次结果过多，超出模型处理能力。建议减少总批次数。" + " " + errMsg;
+        }
+        sendSSE(res, "error", { error: errMsg });
+      } finally {
+        res.end();
+      }
       return;
     }
 
+    // ==================== 普通批次审查模式 ====================
     if (!images || images.length === 0) {
-      sendJSON(res, 400, {
-        error: "未收到有效的 PDF 页面图片",
-        hint: "请将 PDF 各页渲染为 base64 图片后通过 JSON body 的 images 数组发送",
-      });
+      sendJSON(res, 400, { error: "未收到有效的 PDF 页面图片" });
       return;
     }
 
-    // 图片数量限制
     let finalImages = images;
-    if (finalImages.length > MAX_IMAGES) {
-      finalImages = finalImages.slice(0, MAX_IMAGES);
+    if (finalImages.length > MAX_IMAGES_PER_BATCH) {
+      finalImages = finalImages.slice(0, MAX_IMAGES_PER_BATCH);
     }
-
-    // ==================== 执行审查 ====================
-    const systemPrompt = buildSystemPrompt(dimensions);
 
     // SSE 流式输出
     res.setHeader("Content-Type", "text/event-stream");
@@ -249,26 +271,36 @@ const handler = async function (req, res) {
     try {
       sendSSE(res, "stage", {
         stage: "review",
-        message: `正在使用 Kimi 视觉模型分析 ${finalImages.length} 页财务报告...`,
+        message: `正在审查第 ${batchIndex + 1}/${totalBatches} 批（${finalImages.length} 页）...`,
+        batchIndex,
+        totalBatches,
         pageCount: finalImages.length,
       });
 
-      const stream = streamVisionChat(apiKey, systemPrompt, finalImages, totalPages || images.length, MAX_IMAGES);
+      const systemPrompt = buildSystemPrompt(dimensions);
+      const userContent = buildBatchUserContent(finalImages, batchIndex, totalBatches);
+
+      const stream = streamKimiChat(apiKey, "kimi-k2.6", [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userContent },
+      ]);
+
       for await (const event of stream) {
         sendSSE(res, "content", { content: event.content });
       }
 
-      sendSSE(res, "done", { message: "审查完成" });
+      sendSSE(res, "done", {
+        message: `第 ${batchIndex + 1}/${totalBatches} 批审查完成`,
+        batchIndex,
+        totalBatches,
+      });
     } catch (err) {
-      console.error("审查过程出错:", err);
-
-      // 检查是否是 token 超限错误
-      let errorMsg = err.message || "未知错误";
-      if (errorMsg.includes("token") || errorMsg.includes("context length") || errorMsg.includes("too long")) {
-        errorMsg = "图片内容过大，超出模型处理能力。建议减少 PDF 页数或降低图片质量后重试。" + " 原始错误: " + errorMsg;
+      console.error(`批次 ${batchIndex} 审查出错:`, err);
+      let errMsg = err.message || "未知错误";
+      if (errMsg.includes("token") || errMsg.includes("context length")) {
+        errMsg = `批次图片过大，超出模型处理能力。${errMsg}`;
       }
-
-      sendSSE(res, "error", { error: errorMsg });
+      sendSSE(res, "error", { error: errMsg, batchIndex });
     } finally {
       res.end();
     }
@@ -282,8 +314,4 @@ const handler = async function (req, res) {
 
 // ==================== 导出 ====================
 module.exports = handler;
-module.exports.config = {
-  api: {
-    bodyParser: false,
-  },
-};
+module.exports.config = { api: { bodyParser: false } };
